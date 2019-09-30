@@ -10,13 +10,16 @@ import { NavigationActions } from 'react-navigation';
 import client from '../services/client'
 
 export const signup = ({ username, email, password }) => dispatch => {
-  dispatch({
-    type: SIGNUP
-  })
+  // Headder
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
 
-  // const config = {
-
-  // }
+  // Request body
+  console.log(username, email, password)
+  // const body = JSON.stringify()
 
   // const body = JSON.stringify({ username, email, password });
 

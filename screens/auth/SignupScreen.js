@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, Image, ActivityIndicator } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { LinearGradient } from 'expo';
+import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { signup } from '../../actions/auth_actions';
@@ -38,7 +38,7 @@ class SignupScreen extends Component {
     const { email, username, password } = this.state;
 
     await this.props.signup({username, email, password});
-    this.props.navigation.navigate('auth')
+    // this.props.navigation.navigate('auth')
   }
 
   onSignin = (dispatch) => {
