@@ -3,9 +3,8 @@ import { Text, View, Image } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { LinearGradient } from 'expo';
-import axios from 'axios';
-import auth_reducer from '../../reducers/auth_reducer';
 import { connect } from 'react-redux';
+import { login } from '../../actions/auth_actions'
 
 class AuthScreen extends Component {
   constructor(props) {
@@ -13,26 +12,13 @@ class AuthScreen extends Component {
     this.state = this.getInitialState();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { signedup } = this.props;
-
-    console.log(this.prop)
-    console.log(nextProps)
-
-    if(nextProps.signedup !== signedup) {
-      console.log("must update")
-      return true;
-    }
-
-    return false;
-  }
-
   getInitialState = () => {
     const initialState = {
-      emailInput: '',
-      passwordInput: '',
+      email: '',
+      password: '',
       emailEmpty: false,
-      passwordEmpty: false
+      passwordEmpty: false,
+      msg: ''
     }
     return initialState;
   }
@@ -41,11 +27,21 @@ class AuthScreen extends Component {
     this.setState(this.getInitialState())
   }
 
-  onLogin = () => {
-    if(this.state.emailInput != '' && this.regexCheck()) {
-      if(this.state.passwordInput != '') {
-        this.resetState()
-        this.props.navigation.navigate('map');
+  onLogin = async () => {
+    const { email, password } = this.state;
+
+    // this.props.navigation.navigate('studyGroup');
+    if(this.state.email != '') {
+      if(this.state.password != '') {
+        // this.resetState()
+        await this.props.login({email, password})
+        console.log(this.props.auth)
+        if(this.props.auth.isAuthenticated) {
+          this.props.navigation.navigate('studyGroup');
+        } else {
+          this.setState({ msg: this.props.error.msg.error})
+        }
+
       } else {
           this.setState({
             passwordEmpty: true
@@ -60,7 +56,7 @@ class AuthScreen extends Component {
 
   regexCheck = () => {
     const regex = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/
-    return regex.test(this.state.emailInput)
+    return regex.test(this.state.email)
   }
 
   onSignup = () => {
@@ -72,7 +68,7 @@ class AuthScreen extends Component {
   }
 
   render() {
-    const { signedup } = this.props;
+    const { signedup } = this.props.auth;
 
     return (
       <LinearGradient
@@ -109,7 +105,7 @@ class AuthScreen extends Component {
           containerStyle={styles.inputStyle}
           inputStyle={{color: '#2A3C4E'}}
           leftIconContainerStyle={styles.leftIconContainerStyle}
-          onChangeText={emailInput => this.setState({ emailInput, passwordEmpty: false, emailEmpty: false })}
+          onChangeText={email => this.setState({ email, passwordEmpty: false, emailEmpty: false })}
         >
         </Input>
         <Input
@@ -126,9 +122,14 @@ class AuthScreen extends Component {
           containerStyle={styles.inputStyle}
           inputStyle={{color: '#2A3C4E'}}
           leftIconContainerStyle={styles.leftIconContainerStyle}
-          onChangeText={passwordInput => this.setState({ passwordInput, passwordEmpty: false, emailEmpty: false })}
+          onChangeText={password => this.setState({ password, passwordEmpty: false, emailEmpty: false })}
         >
         </Input>
+        {this.state.msg ?
+          <Text style={{color: '#f4b20b', paddingTop: 10, fontStyle: 'italic'}}>
+            {this.state.msg}
+          </Text> : null
+        }
         {this.state.emailEmpty ?
           <Text style={{color: 'red', paddingTop: 10, fontStyle: 'italic'}}>
             Please fill out your email
@@ -140,7 +141,7 @@ class AuthScreen extends Component {
           </Text> : null
         }
         {signedup ?
-          <Text style={{color: 'green', paddingTop: 10, fontStyle: 'italic'}}>
+          <Text style={{color: '#1c7cff', paddingTop: 15, fontStyle: 'italic', fontWeight: 'bold'}}>
             Successfully signed up, please login!
           </Text> : null}
         <Button
@@ -221,7 +222,8 @@ const styles = {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  error: state.error
 })
 
-export default connect(mapStateToProps, {})(AuthScreen)
+export default connect(mapStateToProps, { login })(AuthScreen)

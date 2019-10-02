@@ -1,16 +1,19 @@
 import {
-  LOGIN_SUCESS,
+  LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOADING,
   SIGNUP_SUCCESS,
-  SIGNUP
+  SIGNUP,
+  LOGOUT_SUCCESS
 } from '../actions/types';
-import deviceStorage from '../services/deviceStorage';
+import { AsyncStorage } from 'react-native'
 
 const initialState = {
-  // token: AsyncStorage.getItem('token'),
+  token: AsyncStorage.getItem('token'),
   isLoading: false,
-  signedup: false
+  signedup: false,
+  isAuthenticated: false,
+  user: {}
 }
 
 export default function(state = initialState, action) {
@@ -20,23 +23,38 @@ export default function(state = initialState, action) {
         ...state,
         isLoading: true
       }
-    case LOGIN_SUCESS:
+    case SIGNUP_SUCCESS:
       return {
         ...state,
+        ...action.payload,
+        isLoading: false,
+        signedup: true
+      }
+    case LOGIN_SUCCESS:
+      AsyncStorage.setItem('token', action.payload.token)
+      // TBD: Handle Expired Token
+      return {
+        ...state,
+        ...action.payload,
+        isAuthenticated: true,
         isLoading: false
       }
-      case SIGNUP_SUCCESS:
-        return {
-          ...state,
-          isLoading: false,
-          signedup: true
-        }
-      case SIGNUP:
-        return {
-          ...state,
-          isLoading: true
-        }
-      default:
-        return initialState;
+    case SIGNUP:
+      return {
+        ...state,
+        isLoading: true
+      }
+    case LOGIN_FAIL:
+    case LOGOUT_SUCCESS:
+      AsyncStorage.removeItem('token');
+      return {
+        ...state,
+        token: null,
+        user: null,
+        isAuthenticated: false,
+        isLoading: false
+      };
+    default:
+        return state;
   }
 }

@@ -13,7 +13,10 @@ import { Provider } from 'react-redux';
 // import store from './store';
 import WelcomeScreen from './screens/WelcomeScreen';
 import ForgotScreen from './screens/auth/ForgotScreen';
-import MapScreen from './screens/main/MapScreen';
+import StudyGroupScreen from './screens/main/StudyGroupScreen';
+import AnnouncementScreen from './screens/main/AnnouncementScreen';
+import RideshareScreen from './screens/main/RideshareScreen';
+import CommerceScreen from './screens/main/CommerceScreen';
 import AuthScreen from './screens/auth/AuthScreen';
 import SignupScreen from './screens/auth/SignupScreen';
 
@@ -21,26 +24,48 @@ export default class App extends React.Component {
   render() {
 
     const MainNavigator = createBottomTabNavigator({
-      welcome: { screen: WelcomeScreen },
+      // welcome: { screen: WelcomeScreen },
       auth: { screen: AuthScreen },
       forgot: { screen: ForgotScreen },
       signup: { screen: SignupScreen },
       main: {
         screen: createBottomTabNavigator({
-          map: { screen: MapScreen },
-          // deck: { screen: DeckScreen },
-          // review: {
-          //   screen: createStackNavigator({
-          //     review: { screen: ReviewScreen },
-          //     settings: { screen: SettingsScreen }
-          //   }),
-          //   navigationOptions: {
-          //     tabBarIcon: ({ tintColor }) => {
-          //       return <Icon name="star" size={30} color={tintColor} />;
-          //     },
-          //     title: 'Liked Foods'
-          //   }
-          // }
+          studyGroup: {
+            screen: StudyGroupScreen,
+            navigationOptions: {
+              tabBarLabel: 'Study Group',
+              tabBarIcon: ({tintColor, activeTintColor}) => (
+                 <Icon name="group" size={26} color={tintColor} />
+                 )
+            },
+          },
+          announcement: {
+            screen: AnnouncementScreen,
+            navigationOptions: {
+              tabBarLabel: 'Announcement',
+              tabBarIcon: ({tintColor, activeTintColor}) => (
+                 <Icon name="announcement" size={26} color={tintColor} />
+                 )
+            },
+          },
+          rideshare: {
+            screen: RideshareScreen,
+            navigationOptions: {
+              tabBarLabel: 'Ridesharing',
+              tabBarIcon: ({tintColor, activeTintColor}) => (
+                 <Icon name="local-taxi" size={26} color={tintColor} />
+                 )
+            },
+          },
+          commerce: {
+            screen: CommerceScreen,
+            navigationOptions: {
+              tabBarLabel: 'Selling',
+              tabBarIcon: ({tintColor, activeTintColor}) => (
+                 <Icon name="shop" size={26} color={tintColor} />
+                 )
+            },
+          },
         }, {
           tabBarPosition: 'bottom',
           swipeEnabled: true, //swipe between different tabs.
@@ -60,9 +85,9 @@ export default class App extends React.Component {
 
     return (
       <Provider store={store}>
-        <View style={styles.container}>
-          <Navigation />
-        </View>
+          <View style={styles.container}>
+            <Navigation />
+          </View>
       </Provider>
     );
   }

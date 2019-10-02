@@ -25,5 +25,5 @@
     "babel-preset-expo": "^5.0.0"
   },
   "private": true,
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3000"
 }

@@ -3,7 +3,7 @@ import { Text, View, Image, ActivityIndicator } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { LinearGradient } from 'expo-linear-gradient';
-import axios from 'axios';
+import { clearErrors } from '../../actions/errorActions';
 import { connect } from 'react-redux';
 import { signup } from '../../actions/auth_actions';
 
@@ -16,9 +16,9 @@ class SignupScreen extends Component {
   getInitialState = () => {
     const initialState = {
       success: false,
-      error: '',
+      msg: '',
       loading: false,
-      username: '',
+      name: '',
       email: '',
       password: ''
     }
@@ -31,17 +31,21 @@ class SignupScreen extends Component {
 
    onSignup = async () => {
     this.setState({
-      error: '',
+      msg: '',
       loading: true
     })
 
-    const { email, username, password } = this.state;
+    const { email, name, password } = this.state;
 
-    await this.props.signup({username, email, password});
-    // this.props.navigation.navigate('auth')
+    await this.props.signup({name, email, password});
+    if(this.props.auth.signedup) {
+      this.props.navigation.navigate('auth');
+    } else {
+      this.setState({ msg: this.props.error.msg.errors[0]})
+    }
   }
 
-  onSignin = (dispatch) => {
+  onSignin = () => {
     this.setState({
       success: false
     })
@@ -94,7 +98,7 @@ class SignupScreen extends Component {
           containerStyle={styles.inputStyle}
           inputStyle={{color: '#2A3C4E'}}
           leftIconContainerStyle={styles.leftIconContainerStyle}
-          onChangeText={username => this.setState({ username })}
+          onChangeText={name => this.setState({ name })}
         >
         </Input>
         <Input
@@ -130,23 +134,18 @@ class SignupScreen extends Component {
           onChangeText={password => this.setState({ password })}
         >
         </Input>
-        {this.state.success ?
-          <View style={{paddingTop: 10, alignItems: 'center'}}>
-            <Text style={styles.successUpperText}>
-              Success! Please check your email for activation link.
-            </Text>
-            <Text style={styles.successBottomText} onPress={this.onSignin}>
-              Then sign in
-            </Text>
-          </View> :
-          <Button
+        {this.state.msg ?
+          <Text style={{color: '#f4b20b', paddingTop: 10, fontStyle: 'italic'}}>
+            {this.state.msg}
+          </Text> : null
+        }
+        <Button
           containerStyle={styles.signupButtonStyle}
           title="Sign Up"
           buttonStyle={{backgroundColor: "#FF9F1C"}}
           titleStyle={{fontWeight: 'bold', fontSize: 16}}
           onPress={this.onSignup}
         />
-        }
         <View style={{alignItems: 'center', marginTop: 70}}>
           <Text
             style={styles.signinTextStyle}
@@ -225,9 +224,11 @@ const styles = {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  error: state.error
 })
 
 export default connect(mapStateToProps, {
-  signup
+  signup,
+  clearErrors
 })(SignupScreen);

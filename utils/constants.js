@@ -1,5 +1,5 @@
 const development = {
-  apiEndpoint: 'https://localhost:3001'
+  apiEndpoint: 'https://localhost:3000'
 }
 
 const production = {

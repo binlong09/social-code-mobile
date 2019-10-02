@@ -6,11 +6,11 @@ import {
   SIGNUP_FAIL,
   SIGNUP
 } from './types';
-import { NavigationActions } from 'react-navigation';
 import client from '../services/client'
+import axiosInstance from '../services/client';
+import {returnErrors } from './errorActions'
 
-export const signup = ({ username, email, password }) => dispatch => {
-  // Headder
+export const signup = ({ name, email, password }) => async(dispatch) => {
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -18,20 +18,44 @@ export const signup = ({ username, email, password }) => dispatch => {
   }
 
   // Request body
-  console.log(username, email, password)
-  // const body = JSON.stringify()
+  const body = JSON.stringify({ name, email, password });
 
-  // const body = JSON.stringify({ username, email, password });
+  await axiosInstance.post('/users', body, config)
+    .then(res => {
+        dispatch({
+          type: SIGNUP_SUCCESS,
+          payload: res.data
+        })
+      })
+    .catch(err => {
+      dispatch(returnErrors(err.response.data, err.response.status, 'SIGNUP_FAIL'));
+      dispatch({
+        type: SIGNUP_FAIL
+      })
+    })
+}
 
-  // client.post('/users', body, config)
-  //   .then(res => dispatch({
-  //     type: SIGNUP_SUCCESS,
-  //     payload: res.data
-  //   }))
-  //   .catch(err => {
-  //     dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'));
-  //     dispatch({
-  //       type: REGISTER_FAIL
-  //     })
-  //   })
+export const login = ({ email, password, }) => async(dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+
+  const body = JSON.stringify({ email, password });
+
+  await axiosInstance.post('/auth/login', body, config)
+    .then(res =>
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
+      dispatch({
+        type: LOGIN_FAIL
+      })
+    })
+
 }
