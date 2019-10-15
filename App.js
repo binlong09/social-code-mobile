@@ -13,12 +13,62 @@ import { Provider } from 'react-redux';
 // import store from './store';
 import WelcomeScreen from './screens/WelcomeScreen';
 import ForgotScreen from './screens/auth/ForgotScreen';
-import StudyGroupScreen from './screens/main/StudyGroupScreen';
-import AnnouncementScreen from './screens/main/AnnouncementScreen';
-import RideshareScreen from './screens/main/RideshareScreen';
-import CommerceScreen from './screens/main/CommerceScreen';
+import StudyGroupScreen from './screens/main/study_group/StudyGroupScreen';
+import StudyGroupDetailScreen from './screens/main/study_group/StudyGroupDetailScreen';
+import AnnouncementScreen from './screens/main/announcement/AnnouncementScreen';
+import RideshareScreen from './screens/main/rideshare/RideshareScreen';
+import CommerceScreen from './screens/main/commerce/CommerceScreen';
+import ProfileScreen from './screens/main/profile/ProfileScreen';
 import AuthScreen from './screens/auth/AuthScreen';
 import SignupScreen from './screens/auth/SignupScreen';
+
+const StudyGroupStack = createStackNavigator({
+  StudyGroup: {
+    screen: StudyGroupScreen,
+    navigationOptions: {
+      headerTitle: 'Study Group',
+    }
+  },
+  StudyGroupDetail: {
+    screen: StudyGroupDetailScreen,
+  }
+})
+
+const AnnounmentStack = createStackNavigator({
+  Announcement: {
+    screen: AnnouncementScreen,
+    navigationOptions: {
+      headerTitle: 'Announcement',
+    }
+  }
+})
+
+const RideshareStack = createStackNavigator({
+  Rideshare: {
+    screen: RideshareScreen,
+    navigationOptions: {
+      headerTitle: 'Rideshare',
+    }
+  }
+})
+
+const CommerceStack = createStackNavigator({
+  Commerce: {
+    screen: CommerceScreen,
+    navigationOptions: {
+      headerTitle: 'Selling',
+    }
+  }
+})
+
+const ProfileStack = createStackNavigator({
+  Profile: {
+    screen: ProfileScreen,
+    navigationOptions: {
+      headerTitle: 'Profile',
+    }
+  }
+})
 
 export default class App extends React.Component {
   render() {
@@ -30,26 +80,26 @@ export default class App extends React.Component {
       signup: { screen: SignupScreen },
       main: {
         screen: createBottomTabNavigator({
-          studyGroup: {
-            screen: StudyGroupScreen,
+          StudyGroup: {
+            screen: StudyGroupStack,
             navigationOptions: {
               tabBarLabel: 'Study Group',
               tabBarIcon: ({tintColor, activeTintColor}) => (
-                 <Icon name="group" size={26} color={tintColor} />
-                 )
-            },
+                  <Icon name="group" size={26} color={tintColor} />
+              ),
+            }
           },
-          announcement: {
-            screen: AnnouncementScreen,
+          Announcement: {
+            screen: AnnounmentStack,
             navigationOptions: {
               tabBarLabel: 'Announcement',
               tabBarIcon: ({tintColor, activeTintColor}) => (
-                 <Icon name="announcement" size={26} color={tintColor} />
-                 )
-            },
+                <Icon name="announcement" size={26} color={tintColor} />
+              ),
+            }
           },
-          rideshare: {
-            screen: RideshareScreen,
+          Rideshare: {
+            screen: RideshareStack,
             navigationOptions: {
               tabBarLabel: 'Ridesharing',
               tabBarIcon: ({tintColor, activeTintColor}) => (
@@ -57,8 +107,8 @@ export default class App extends React.Component {
                  )
             },
           },
-          commerce: {
-            screen: CommerceScreen,
+          Commerce: {
+            screen: CommerceStack,
             navigationOptions: {
               tabBarLabel: 'Selling',
               tabBarIcon: ({tintColor, activeTintColor}) => (
@@ -66,17 +116,26 @@ export default class App extends React.Component {
                  )
             },
           },
+          Profile: {
+            screen: ProfileStack,
+            navigationOptions: {
+              tabBarLabel: 'Profile',
+              tabBarIcon: ({tintColor, activeTintColor}) => (
+                 <Icon name="account-circle" size={26} color={tintColor} />
+              )
+            },
+          }
         }, {
           tabBarPosition: 'bottom',
           swipeEnabled: true, //swipe between different tabs.
           tabBarOptions: {
-            labelStyle: { fontSize: 12 }
+            labelStyle: { fontSize: 12 },
           }
         })
       }
     }, {
       defaultNavigationOptions: {
-        tabBarVisible: false
+        tabBarVisible: false,
       },
       lazy: true
     });

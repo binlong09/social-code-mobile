@@ -4,13 +4,17 @@ import {
   LOGIN_FAIL,
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
-  SIGNUP
+  SIGNUP,
+  LOGOUT_SUCCESS
 } from './types';
 import client from '../services/client'
 import axiosInstance from '../services/client';
 import {returnErrors } from './errorActions'
 
 export const signup = ({ name, email, password }) => async(dispatch) => {
+  dispatch({
+    type: SIGNUP
+  })
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -57,5 +61,11 @@ export const login = ({ email, password, }) => async(dispatch) => {
         type: LOGIN_FAIL
       })
     })
-
 }
+
+// Logout User
+export const logout = () => {
+  return {
+    type: LOGOUT_SUCCESS
+  };
+};

@@ -30,10 +30,10 @@ class SignupScreen extends Component {
   }
 
    onSignup = async () => {
-    this.setState({
-      msg: '',
-      loading: true
-    })
+    // this.setState({
+    //   msg: '',
+    //   loading: true
+    // })
 
     const { email, name, password } = this.state;
 
@@ -58,16 +58,13 @@ class SignupScreen extends Component {
 
 
   render() {
-    const { isLoading } = this.props;
+    const { isLoading } = this.props.auth;
 
     return (
       <LinearGradient
         // colors={['#304768','#374A6A','#3C4D6C','#3F4E6D','#414E6D','#465170']}
         colors={['#fac198','#ebb798','#e3b398','#c49f98','#ab9198','#928197','#847898']}
         style={styles.container}>
-        {isLoading ?
-          <ActivityIndicator size="large" color="#0000ff" /> : null
-        }
         <Image
           // source={require('../../assets/logoFull.png')}
           source={require('../../assets/social_code.png')}
@@ -134,6 +131,9 @@ class SignupScreen extends Component {
           onChangeText={password => this.setState({ password })}
         >
         </Input>
+        {isLoading ?
+          <ActivityIndicator size="large" color="#f4b20b" style={{paddingTop: 10}}/> : null
+        }
         {this.state.msg ?
           <Text style={{color: '#f4b20b', paddingTop: 10, fontStyle: 'italic'}}>
             {this.state.msg}

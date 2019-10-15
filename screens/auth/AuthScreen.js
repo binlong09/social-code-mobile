@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, AsyncStorage } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { LinearGradient } from 'expo';
+import { LinearGradient } from 'expo-linear-gradient';
 import { connect } from 'react-redux';
 import { login } from '../../actions/auth_actions'
 
@@ -11,6 +11,18 @@ class AuthScreen extends Component {
     super(props)
     this.state = this.getInitialState();
   }
+
+  componentDidMount() {
+    this._bootstrapAsync();
+  }
+
+  _bootstrapAsync = async () => {
+    const token = await AsyncStorage.getItem('token');
+
+    // This will switch to the App screen or Auth screen and this loading
+    // screen will be unmounted and thrown away.
+    this.props.navigation.navigate(token ? 'main' : 'auth');
+  };
 
   getInitialState = () => {
     const initialState = {
@@ -35,9 +47,8 @@ class AuthScreen extends Component {
       if(this.state.password != '') {
         // this.resetState()
         await this.props.login({email, password})
-        console.log(this.props.auth)
         if(this.props.auth.isAuthenticated) {
-          this.props.navigation.navigate('studyGroup');
+          this.props.navigation.navigate('StudyGroup');
         } else {
           this.setState({ msg: this.props.error.msg.error})
         }
@@ -141,7 +152,7 @@ class AuthScreen extends Component {
           </Text> : null
         }
         {signedup ?
-          <Text style={{color: '#1c7cff', paddingTop: 15, fontStyle: 'italic', fontWeight: 'bold'}}>
+          <Text style={{color: '#fac198', paddingTop: 15, fontStyle: 'italic'}}>
             Successfully signed up, please login!
           </Text> : null}
         <Button

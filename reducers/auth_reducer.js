@@ -4,7 +4,8 @@ import {
   LOADING,
   SIGNUP_SUCCESS,
   SIGNUP,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
+  SIGNUP_FAIL
 } from '../actions/types';
 import { AsyncStorage } from 'react-native'
 
@@ -30,6 +31,16 @@ export default function(state = initialState, action) {
         isLoading: false,
         signedup: true
       }
+    case SIGNUP:
+      return {
+        ...state,
+        isLoading: true
+      }
+    case SIGNUP_FAIL:
+      return {
+        ...state,
+        isLoading: false
+      }
     case LOGIN_SUCCESS:
       AsyncStorage.setItem('token', action.payload.token)
       // TBD: Handle Expired Token
@@ -38,11 +49,6 @@ export default function(state = initialState, action) {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false
-      }
-    case SIGNUP:
-      return {
-        ...state,
-        isLoading: true
       }
     case LOGIN_FAIL:
     case LOGOUT_SUCCESS:
