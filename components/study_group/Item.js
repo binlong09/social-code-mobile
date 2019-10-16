@@ -25,7 +25,7 @@ export default class Item extends Component {
             <Text style={styles.textStyle}>{location}</Text>
             <Text style={styles.textStyle}>{meeting_time}</Text>
             {going ?
-              <Button buttonStyle={styles.goingButtonStyle} title={"Going!"}/>:
+              <Button buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/>:
               <Button buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>
             }
             <Text style={styles.textStyle}>With {going_count} others</Text>

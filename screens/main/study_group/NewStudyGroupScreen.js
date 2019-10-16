@@ -5,6 +5,7 @@ import DatePicker from 'react-native-datepicker';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import { items } from '../../../components/study_group/List'
 
 export default class NewStudyGroupScreen extends Component {
   constructor(props) {
@@ -45,6 +46,21 @@ export default class NewStudyGroupScreen extends Component {
     }
   };
 
+  onCreate = async () => {
+    await items.push({
+      id: 10,
+      class_code: this.state.class_code,
+      image_url: this.state.image,
+      professor_name: this.state.professor_name,
+      location: this.state.location,
+      meeting_time: this.state.date,
+      going: true,
+      going_count: 0
+    })
+
+    this.props.navigation.navigate('StudyGroup')
+  }
+
   render() {
     const { image } = this.state;
 
@@ -72,12 +88,12 @@ export default class NewStudyGroupScreen extends Component {
             source={{ uri: image }}
             style={{width: '100%', height: 200 }}
           >
-          <Button
-            onPress={this._pickImage}
-            style={{ height: "100%", width: "100%", borderWidth: "1", borderColor: 'white',  }}
-            titleStyle={{color: "white"}}
-            type="clear"
-          />
+            <Button
+              onPress={this._pickImage}
+              style={{ height: "100%", width: "100%", borderWidth: "1", borderColor: 'white',  }}
+              titleStyle={{color: "white"}}
+              type="clear"
+            />
           </ImageBackground>
         }
 
@@ -159,6 +175,7 @@ export default class NewStudyGroupScreen extends Component {
         <Button
           title={'CREATE'}
           containerStyle={{ width: "95%", height: "85%", marginTop: 10,  }}
+          onPress={this.onCreate}
         />
       </View>
 
