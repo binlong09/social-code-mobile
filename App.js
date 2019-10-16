@@ -5,16 +5,17 @@ import {
   createStackNavigator,
   createAppContainer
 } from 'react-navigation';
-// import { Provider } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import store from './store';
 import { Provider } from 'react-redux';
+import NavigationService from './services/NavigationService'
 
-// import store from './store';
+// importing screen
 import WelcomeScreen from './screens/WelcomeScreen';
 import ForgotScreen from './screens/auth/ForgotScreen';
 import StudyGroupScreen from './screens/main/study_group/StudyGroupScreen';
 import StudyGroupDetailScreen from './screens/main/study_group/StudyGroupDetailScreen';
+import NewStudyGroupScreen from './screens/main/study_group/NewStudyGroupScreen';
 import AnnouncementScreen from './screens/main/announcement/AnnouncementScreen';
 import RideshareScreen from './screens/main/rideshare/RideshareScreen';
 import CommerceScreen from './screens/main/commerce/CommerceScreen';
@@ -31,7 +32,13 @@ const StudyGroupStack = createStackNavigator({
   },
   StudyGroupDetail: {
     screen: StudyGroupDetailScreen,
-  }
+  },
+  NewStudyGroup: {
+    screen: NewStudyGroupScreen,
+    navigationOptions: {
+      headerTitle: 'New Study Group',
+    }
+  },
 })
 
 const AnnounmentStack = createStackNavigator({
@@ -145,7 +152,11 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
           <View style={styles.container}>
-            <Navigation />
+            <Navigation
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+              }}
+            />
           </View>
       </Provider>
     );

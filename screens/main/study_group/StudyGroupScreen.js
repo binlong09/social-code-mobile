@@ -7,13 +7,14 @@ import { Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { logout } from '../../../actions/auth_actions'
 import { connect } from 'react-redux';
-import List from '../../../components/List';
+import List from '../../../components/study_group/List';
+import NavigationService from '../../../services/NavigationService'
 
 class StudyGroupScreen extends Component {
   static navigationOptions = {
     headerLeft: (
       <Button
-        onPress={() => alert('This is a button!')}
+        onPress={() => NavigationService.navigate('NewStudyGroup')}
         icon={
           <Icon
             name="plus"
