@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Stylesheet, View, TouchableOpacity, Text} from 'react-native';
+import { Image, Stylesheet, View, TouchableOpacity, Text } from 'react-native';
 
 export default class Post extends Component {
   constructor(props) {
@@ -16,3 +16,7 @@ export default class Post extends Component {
     )
   }
 }
+
+const stypes = StyleSheet.create({
+
+})
