@@ -23,7 +23,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.socialcode.socialcode"
     },
     "android": {
       "package": "com.socialcode.socialcode"

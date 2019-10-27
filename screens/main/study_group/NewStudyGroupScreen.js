@@ -6,6 +6,9 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { items } from '../../../components/study_group/List'
+import firebase from '../../../config/firebase';
+import shrinkImageAsync from '../../../utils/shrinkImageAsync'
+import uploadImageAsync from '../../../utils/uploadImageAsync'
 
 export default class NewStudyGroupScreen extends Component {
   constructor(props) {
@@ -47,6 +50,13 @@ export default class NewStudyGroupScreen extends Component {
   };
 
   onCreate = async () => {
+
+    const { uri: reducedImage, width, height } = await shrinkImageAsync(
+      this.state.image,
+    );
+
+    const image_url  = await uploadImageAsync(reducedImage);
+
     await items.push({
       id: 10,
       class_code: this.state.class_code,
@@ -174,7 +184,7 @@ export default class NewStudyGroupScreen extends Component {
 
         <Button
           title={'CREATE'}
-          containerStyle={{ width: "95%", height: "85%", marginTop: 10,  }}
+          containerStyle={{ width: "95%", height: "85%", marginTop: 10}}
           onPress={this.onCreate}
         />
       </View>

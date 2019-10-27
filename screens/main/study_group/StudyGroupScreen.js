@@ -84,7 +84,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: 10
+    paddingTop: 10,
+    // backgroundColor: '#e28e1d'
   },
   safeArea: {
     flex: 1,

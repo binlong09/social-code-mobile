@@ -59,12 +59,14 @@ const styles = StyleSheet.create({
   },
   goingButtonStyle: {
     width: "80%",
-    backgroundColor: '#1ecbe1',
-    marginBottom: 10
+    backgroundColor: '#e28e1d',
+    marginBottom: 10,
+    borderRadius: 10
   },
   notGoingbuttonStyle: {
     width: "80%",
-    backgroundColor: 'gray',
-    marginBottom: 10
+    backgroundColor: '#5663a9',
+    marginBottom: 10,
+    borderRadius: 10
   }
 });

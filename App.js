@@ -68,14 +68,14 @@ const CommerceStack = createStackNavigator({
   }
 })
 
-const ProfileStack = createStackNavigator({
-  Profile: {
-    screen: ProfileScreen,
-    navigationOptions: {
-      headerTitle: 'Profile',
-    }
-  }
-})
+// const ProfileStack = createStackNavigator({
+//   Profile: {
+//     screen: ProfileScreen,
+//     navigationOptions: {
+//       headerTitle: 'Profile',
+//     }
+//   }
+// })
 
 export default class App extends React.Component {
   render() {
@@ -124,7 +124,7 @@ export default class App extends React.Component {
             },
           },
           Profile: {
-            screen: ProfileStack,
+            screen: ProfileScreen,
             navigationOptions: {
               tabBarLabel: 'Profile',
               tabBarIcon: ({tintColor, activeTintColor}) => (
