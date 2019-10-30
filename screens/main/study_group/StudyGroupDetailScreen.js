@@ -1,6 +1,20 @@
 import React, { Component } from "react";
-import { View, StyleSheet, TouchableWithoutFeedback, Image } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback, Image, FlatList } from 'react-native';
 import { Text, Input, Icon } from 'react-native-elements';
+import Post from '../../../components/study_group/Post'
+
+const posts = [
+  {
+    id: 1,
+    image_url: "https://images.localist.com/photos/746192/huge/039c008e2501b5024e16245536c29d9028451ca0.jpg",
+    professor_name: "Professor Kim",
+    location: "Glat 112",
+    meeting_time: "Tuesday 8:00PM",
+    class_code: "CS 216",
+    going: true,
+    going_count: 12
+  },
+]
 
 export default class StudyGroupDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -22,7 +36,7 @@ export default class StudyGroupDetailScreen extends Component {
   }
 
   render() {
-    const image_uri = "https://images.localist.com/photos/741746/big_square@2x/b8513b1fdde055487274e639463fe5431b4b3569.jpg"
+    const image_uri = "https://images.localist.com/photos/746192/huge/039c008e2501b5024e16245536c29d9028451ca0.jpg"
 
     return (
       <View style={styles.container}>
@@ -34,7 +48,7 @@ export default class StudyGroupDetailScreen extends Component {
             <Icon
               name='keyboard-arrow-down'
               size={22}
-              color='black'
+              color='#3b5998'
               style={{ alignSelf: 'center' }}
             />
           </View>
@@ -53,7 +67,7 @@ export default class StudyGroupDetailScreen extends Component {
                 <Icon
                   name='date-range'
                   size={18}
-                  color='black'
+                  color='#3b5998'
                 />
               }
               inputStyle={{ fontSize: 14 }}
@@ -62,14 +76,14 @@ export default class StudyGroupDetailScreen extends Component {
             />
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               <Input
-                value={"CS 231"}
+                value={"CS 216"}
                 inputContainerStyle={styles.inputContainerStyle}
                 containerStyle={{ flex: 1 }}
                 leftIcon={
                   <Icon
                     name='class'
                     size={18}
-                    color='black'
+                    color='#3b5998'
                   />
                 }
                 inputStyle={{ fontSize: 14 }}
@@ -84,7 +98,7 @@ export default class StudyGroupDetailScreen extends Component {
                   <Icon
                     name='person'
                     size={18}
-                    color='black'
+                    color='#3b5998'
                   />
                 }
                 inputStyle={{ fontSize: 14 }}
@@ -94,14 +108,14 @@ export default class StudyGroupDetailScreen extends Component {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               <Input
-                value={"Glatfelter 001"}
+                value={"Glatfelter 112"}
                 inputContainerStyle={styles.inputContainerStyle}
                 containerStyle={{ flex: 1 }}
                 leftIcon={
                   <Icon
                     name='location-on'
                     size={18}
-                    color='black'
+                    color='#3b5998'
                   />
                 }
                 inputStyle={{ fontSize: 14 }}
@@ -109,14 +123,14 @@ export default class StudyGroupDetailScreen extends Component {
                 editable={false}
               />
               <Input
-                value={"8 going"}
+                value={"12 going"}
                 inputContainerStyle={styles.inputContainerStyle}
                 containerStyle={{ flex: 1 }}
                 leftIcon={
                   <Icon
                     name='group'
                     size={18}
-                    color='black'
+                    color='#3b5998'
                   />
                 }
                 inputStyle={{ fontSize: 14 }}
@@ -132,7 +146,12 @@ export default class StudyGroupDetailScreen extends Component {
             />
           </View>
           : null}
-      </View>
+          <FlatList
+            data={posts}
+            renderItem={({item}) => <Post />}
+          />
+        </View>
+
     )
   }
 }
