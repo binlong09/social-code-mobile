@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet, TouchableWithoutFeedback, Image, FlatList } from 'react-native';
-import { Text, Input, Icon } from 'react-native-elements';
+import { Text, Input, Icon, Tile } from 'react-native-elements';
 import Post from '../../../components/study_group/Post'
 
 const posts = [
@@ -37,13 +37,14 @@ export default class StudyGroupDetailScreen extends Component {
 
   render() {
     const image_uri = "https://images.localist.com/photos/746192/huge/039c008e2501b5024e16245536c29d9028451ca0.jpg"
+    const title = 'Study for exam 1'
 
     return (
       <View style={styles.container}>
         <TouchableWithoutFeedback onPress={this._toggle}>
           <View style={styles.titleContainerStyle}>
             <Text h4={true} style={{ paddingBottom: 5 }}>
-              Study for Exam 1
+              {title}
             </Text>
             <Icon
               name='keyboard-arrow-down'
@@ -148,7 +149,8 @@ export default class StudyGroupDetailScreen extends Component {
           : null}
           <FlatList
             data={posts}
-            renderItem={({item}) => <Post />}
+            renderItem={({item}) => <Post {...this.props.navigation} title={title} />}
+            keyExtractor={(item, index) => index.toString()}
           />
         </View>
 

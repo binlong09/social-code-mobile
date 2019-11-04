@@ -15,6 +15,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import ForgotScreen from './screens/auth/ForgotScreen';
 import StudyGroupScreen from './screens/main/study_group/StudyGroupScreen';
 import StudyGroupDetailScreen from './screens/main/study_group/StudyGroupDetailScreen';
+import StudyGroupCommentScreen from './screens/main/study_group/StudyGroupCommentScreen'
 import NewStudyGroupScreen from './screens/main/study_group/NewStudyGroupScreen';
 import AnnouncementScreen from './screens/main/announcement/AnnouncementScreen';
 import RideshareScreen from './screens/main/rideshare/RideshareScreen';
@@ -33,6 +34,9 @@ const StudyGroupStack = createStackNavigator({
   StudyGroupDetail: {
     screen: StudyGroupDetailScreen,
   },
+  StudyGroupComment: {
+    screen: StudyGroupCommentScreen,
+  },
   NewStudyGroup: {
     screen: NewStudyGroupScreen,
     navigationOptions: {
@@ -40,6 +44,19 @@ const StudyGroupStack = createStackNavigator({
     }
   },
 })
+
+StudyGroupStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  for (let i = 0; i < navigation.state.routes.length; i++) {
+    if (navigation.state.routes[i].routeName == "StudyGroupComment") {
+      tabBarVisible = false;
+    }
+  }
+
+  return {
+    tabBarVisible
+  };
+};
 
 const AnnounmentStack = createStackNavigator({
   Announcement: {

@@ -9,7 +9,6 @@ export default class Item extends Component {
   constructor(props) {
     super(props)
   }
-  state = {};
 
   render() {
     // console.log(this.props)

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, View, Text, Modal, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Image, StyleSheet, View, Text, Modal, TouchableOpacity, ScrollView } from 'react-native';
 
 const defaultImageSize = 36;
 
@@ -15,7 +15,8 @@ export default class Post extends Component {
 
   render() {
     const post_image_url = 'https://2.bp.blogspot.com/-gc526LRDxEM/XMGe9dFh2oI/AAAAAAAAPX4/FBrAifdw3XgJaC3xQ6HtdN1MADML1BjywCEwYBhgL/s1600/IMG_0038.jpg'
-    const profile_image_url = 'http://www.gstatic.com/tv/thumb/persons/189825/189825_v9_bc.jpg'
+    const profile_image_url = 'https://shawetcanada.files.wordpress.com/2019/10/shia-labeouf.jpg?quality=80&strip=all&w=720&h=480&crop=1'
+    const { title } = this.props
 
     return(
       <View style={styles.outmostContainer}>
@@ -26,24 +27,22 @@ export default class Post extends Component {
             defaultSource={require('../../assets/empty_image.png')}
           />
           <View style={styles.userInfoContainerStyle}>
-            <Text style={styles.nameTextStyle}>Nghia Dang</Text>
+            <Text style={styles.nameTextStyle}>Shia Labeouf</Text>
             <Text style={styles.createdAtTextStyle}>May 22 at 8:44 AM</Text>
           </View>
         </View>
         <Text style={styles.subtitle}>
-          Here is the answer for review question 10
+          Here is the review question for exam 1. DO IT!
         </Text>
-        <Image
-          resizeMode="contain"
-          style={styles.postImageStyle}
-          source={{ uri: post_image_url }}
-        />
+        <ScrollView maximumZoomScale={5} scrollEnabled={true} minimumZoomScale={1} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+          <Image
+            resizeMode="contain"
+            style={styles.postImageStyle}
+            source={{ uri: post_image_url }}
+          />
+        </ScrollView>
         <TouchableOpacity
-          onPress={() => {
-            this.setState({
-              commentModalVisible: !this.state.commentModalVisible
-            });
-          }}
+          onPress={() => this.props.navigate('StudyGroupComment', { title: title })}
         >
           <Text style={styles.commentNumberStyle}>
             2 comments

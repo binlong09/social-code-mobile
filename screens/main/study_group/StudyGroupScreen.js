@@ -46,14 +46,6 @@ class StudyGroupScreen extends Component {
     this.setState({ token })
   }
 
-  onLogout = async () => {
-    await this.props.logout();
-    const token = await AsyncStorage.getItem('token');
-    if(token == null) {
-      this.props.navigation.navigate('auth')
-    }
-  }
-
   render() {
     const { ...props } = this.props;
 
