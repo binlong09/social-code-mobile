@@ -10,6 +10,7 @@ import {
 import client from '../services/client'
 import axiosInstance from '../services/client';
 import {returnErrors } from './errorActions'
+import Constants from '../services/constants'
 
 export const signup = ({ name, email, password }) => async(dispatch) => {
   dispatch({
@@ -23,6 +24,8 @@ export const signup = ({ name, email, password }) => async(dispatch) => {
 
   // Request body
   const body = JSON.stringify({ name, email, password });
+
+  console.log(__DEV__)
 
   await axiosInstance.post('/users', body, config)
     .then(res => {

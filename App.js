@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform } from 'react-native';
+import { StyleSheet, Text, View, Platform, KeyboardAvoidingView } from 'react-native';
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -168,13 +168,13 @@ export default class App extends React.Component {
 
     return (
       <Provider store={store}>
-          <View style={styles.container}>
+          <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
             <Navigation
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
               }}
             />
-          </View>
+          </KeyboardAvoidingView>
       </Provider>
     );
   }
