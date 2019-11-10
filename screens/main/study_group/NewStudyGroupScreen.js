@@ -39,7 +39,7 @@ export default class NewStudyGroupScreen extends Component {
 
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
     });
@@ -48,6 +48,18 @@ export default class NewStudyGroupScreen extends Component {
       this.setState({ image: result.uri });
     }
   };
+
+  _captureImage = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+    })
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  }
 
   onCreate = async () => {
 
@@ -79,16 +91,28 @@ export default class NewStudyGroupScreen extends Component {
         {!image ?
           <ImageBackground
             source={require('../../../assets/empty_image.png')}
-            style={{width: '100%', height: 200 }}
+            style={{width: '100%', height: 200, alignItems: 'center' }}
           >
           <Button
-            title="Add Photo"
+            title="Pick a photo"
             onPress={this._pickImage}
-            style={{ width: "40%", margin: "30%", borderWidth: "1", borderColor: 'white',  }}
+            style={{ borderWidth: "1", borderColor: 'white', marginTop: "15%" }}
             titleStyle={{color: "white"}}
             type="clear"
             icon={{
               name: "photo",
+              size: 20,
+              color: "white"
+            }}
+          />
+          <Button
+            title="Use Camera"
+            onPress={this._captureImage}
+            style={{ borderWidth: "1", borderColor: 'white', marginTop: "5%" }}
+            titleStyle={{color: "white"}}
+            type="clear"
+            icon={{
+              name: "camera-alt",
               size: 20,
               color: "white"
             }}

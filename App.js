@@ -9,6 +9,7 @@ import { Icon } from 'react-native-elements';
 import store from './store';
 import { Provider } from 'react-redux';
 import NavigationService from './services/NavigationService'
+import { loadToken } from './actions/auth_actions'
 
 // importing screen
 import WelcomeScreen from './screens/WelcomeScreen';

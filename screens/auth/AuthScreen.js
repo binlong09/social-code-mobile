@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { LinearGradient } from 'expo-linear-gradient';
 import { connect } from 'react-redux';
 import { login } from '../../actions/auth_actions'
+import store from '../../store/'
+import { loadToken } from '../../actions/auth_actions'
 
 class AuthScreen extends Component {
   constructor(props) {
@@ -12,7 +14,8 @@ class AuthScreen extends Component {
     this.state = this.getInitialState();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await store.dispatch(loadToken())
     this._bootstrapAsync();
   }
 

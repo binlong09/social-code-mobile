@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
   StyleSheet, Text, View, SafeAreaView, AsyncStorage,
-  LayoutAnimation, RefreshControl
+  LayoutAnimation, ActivityIndicator, RefreshControl
 } from 'react-native'
 import { Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,6 +9,10 @@ import { logout } from '../../../actions/auth_actions'
 import { connect } from 'react-redux';
 import List from '../../../components/study_group/List';
 import NavigationService from '../../../services/NavigationService'
+import {
+  getStudyGroupsIndex,
+  addStudyGroupIndex
+} from '../../../actions/study_group/study_group_index_actions'
 
 class StudyGroupScreen extends Component {
   static navigationOptions = {
@@ -30,15 +34,13 @@ class StudyGroupScreen extends Component {
 
   constructor(props) {
     super(props)
-    this.state = this.getInitialState();
-    this.fetchToken();
+    this.state = {
+      study_groups: {}
+    }
   }
 
-  getInitialState = () => {
-    const initialState = {
-      token: ''
-    }
-    return initialState
+  componentDidMount() {
+    this.props.getStudyGroupsIndex()
   }
 
   fetchToken = async () => {
@@ -46,24 +48,33 @@ class StudyGroupScreen extends Component {
     this.setState({ token })
   }
 
+  fetchStudyGroups = () => {
+    this.props.getStudyGroupsIndex()
+  }
+
   render() {
     const { ...props } = this.props;
+    const { isLoading, study_groups } = this.props.study_groups;
 
     LayoutAnimation.easeInEaseOut();
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
-        <List
-          refreshControl={
-            <RefreshControl
-              // refreshing={this.state.loading}
-              // onRefresh={this._onRefresh}
-            />
-          }
-          // onPressFooter={this.onPressFooter}
-          // data={this.state.posts}
-          {...props}
-        />
+        {isLoading?
+          <ActivityIndicator size="large" color="#e28e1d" /> :
+          <List
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={this.fetchStudyGroups}
+              />
+            }
+            // onPressFooter={this.onPressFooter}
+            data={study_groups}
+            {...props}
+          />
+        }
+
         </View>
       </SafeAreaView>
     )
@@ -85,7 +96,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  study_groups: state.study_group_index
 })
 
-export default connect(mapStateToProps, { logout })(StudyGroupScreen)
+export default connect(mapStateToProps, { getStudyGroupsIndex, addStudyGroupIndex })(StudyGroupScreen)

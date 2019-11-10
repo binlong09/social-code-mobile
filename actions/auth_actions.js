@@ -5,12 +5,20 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
   SIGNUP,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
+  LOAD_TOKEN
 } from './types';
-import client from '../services/client'
-import axiosInstance from '../services/client';
-import {returnErrors } from './errorActions'
-import Constants from '../services/constants'
+import { axiosInstance } from '../services/client';
+import { returnErrors } from './errorActions'
+
+export const loadToken = () => async (dispatch) => {
+  const token = await AsyncStorage.getItem('token')
+
+  dispatch({
+    type: LOAD_TOKEN,
+    payload: token
+  })
+}
 
 export const signup = ({ name, email, password }) => async(dispatch) => {
   dispatch({
@@ -24,8 +32,6 @@ export const signup = ({ name, email, password }) => async(dispatch) => {
 
   // Request body
   const body = JSON.stringify({ name, email, password });
-
-  console.log(__DEV__)
 
   await axiosInstance.post('/users', body, config)
     .then(res => {

@@ -5,12 +5,14 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP,
   LOGOUT_SUCCESS,
-  SIGNUP_FAIL
+  SIGNUP_FAIL,
+  LOAD_TOKEN,
+  STUDY_GROUP_INDEX_LOADING
 } from '../actions/types';
 import { AsyncStorage } from 'react-native'
 
 const initialState = {
-  token: AsyncStorage.getItem('token'),
+  token: null,
   isLoading: false,
   signedup: false,
   isAuthenticated: false,
@@ -19,7 +21,13 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch(action.type) {
-    case LOADING:
+    case LOAD_TOKEN:
+      return {
+        ...state,
+        ...action.payload,
+        token: action.payload
+      }
+    case STUDY_GROUP_INDEX_LOADING:
       return {
         ...state,
         isLoading: true
@@ -47,6 +55,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         ...action.payload,
+        token: action.payload.token,
         isAuthenticated: true,
         isLoading: false
       }

@@ -10,7 +10,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/placeholder.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -23,7 +23,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.socialcode.socialcode"
     },
     "android": {

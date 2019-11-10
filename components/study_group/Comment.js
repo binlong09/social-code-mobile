@@ -65,10 +65,9 @@ const styles = StyleSheet.create({
   postWrapStyle: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    paddingTop: defaultImageSize / 12,
   },
   postContentStyle: {
-    borderRadius: 5,
+    borderRadius: 10,
     borderColor: 'gray',
     backgroundColor: '#f2f2f2',
     paddingRight: 8,

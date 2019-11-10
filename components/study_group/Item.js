@@ -10,23 +10,31 @@ export default class Item extends Component {
     super(props)
   }
 
+  onCancel = (id) => async() => {
+    // /study_groups/id/not_going
+  }
+
+  onAccept = id => {
+    // /study_groups/id/going
+  }
+
   render() {
-    // console.log(this.props)
-    const { class_code, professor_name, location, meeting_time, going_count, going, image_url } = this.props;
+    const {
+      id, class_code, professor_name, location, meeting_time, going_count, image_url, going
+    } = this.props;
 
     return (
       <View>
-        <TouchableOpacity style={styles.container} onPress={() => this.props.navigate('StudyGroupDetail', { class_code: class_code })}>
+        <TouchableOpacity style={styles.container} onPress={() => this.props.navigation.navigate('StudyGroupDetail', { class_code: class_code })}>
           <Image style={styles.image} source={{uri: image_url}} />
           <View style={{paddingLeft: 15, paddingRight: 15}}>
             <Text style={{ fontSize:20, paddingBottom: 5, paddingTop: 5 }}>{class_code}</Text>
             <Text style={styles.textStyle}>{professor_name}</Text>
             <Text style={styles.textStyle}>{location}</Text>
             <Text style={styles.textStyle}>{meeting_time}</Text>
-            {going ?
-              <Button buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/>:
-              <Button buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>
-            }
+              {going ?
+              <Button onPress={() => this.onCancel(id)} buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/>:
+              <Button onPress={() => this.onAccept(id)} buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>}
             <Text style={styles.textStyle}>With {going_count} others</Text>
           </View>
         </TouchableOpacity>
