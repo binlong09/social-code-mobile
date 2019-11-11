@@ -1,27 +1,49 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { Component } from "react";
-import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Button } from 'react-native-elements';
+import { tokenConfig } from '../../actions/auth_actions'
+import { axiosInstance } from '../../services/client'
 
 const defaultImageSize = 136;
 
 export default class Item extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      isGoing: this.props.going,
+      isLoading: false
+    }
   }
 
   onCancel = (id) => async() => {
-    // /study_groups/id/not_going
+    this.setState({ isLoading: true })
+
+    const token = tokenConfig()
+
+    await axiosInstance.get(`/study_groups/${id}/not_going`, token)
+      .then(() => this.setState({ isGoing: !this.state.isGoing, isLoading: false }))
+      .catch(err => console.log(err))
   }
 
-  onAccept = id => {
-    // /study_groups/id/going
+  onAccept = (id) => async() => {
+    this.setState({ isLoading: true })
+
+    const token = tokenConfig()
+
+    await axiosInstance.get(`/study_groups/${id}/going`, token)
+      .then(() => this.setState({ isGoing: !this.state.isGoing, isLoading: false }))
+      .catch(err => console.log(err))
   }
 
   render() {
     const {
-      id, class_code, professor_name, location, meeting_time, going_count, image_url, going
+      id, class_code, professor_name, location,
+      meeting_time, going_count, image_url,
     } = this.props;
+
+    const { isGoing, isLoading } = this.state;
 
     return (
       <View>
@@ -32,9 +54,12 @@ export default class Item extends Component {
             <Text style={styles.textStyle}>{professor_name}</Text>
             <Text style={styles.textStyle}>{location}</Text>
             <Text style={styles.textStyle}>{meeting_time}</Text>
-              {going ?
-              <Button onPress={() => this.onCancel(id)} buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/>:
-              <Button onPress={() => this.onAccept(id)} buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>}
+            {isLoading ?
+              <ActivityIndicator size="large" color="#e28e1d" /> :
+              (isGoing ?
+                <Button onPress={this.onCancel(id)} buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/> :
+                <Button onPress={this.onAccept(id)} buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>)
+            }
             <Text style={styles.textStyle}>With {going_count} others</Text>
           </View>
         </TouchableOpacity>

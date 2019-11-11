@@ -10,6 +10,7 @@ import {
 } from './types';
 import { axiosInstance } from '../services/client';
 import { returnErrors } from './errorActions'
+import store from '../store/'
 
 export const loadToken = () => async (dispatch) => {
   const token = await AsyncStorage.getItem('token')
@@ -78,3 +79,19 @@ export const logout = () => {
     type: LOGOUT_SUCCESS
   };
 };
+
+export const tokenConfig = () => {
+  const token = store.getState().auth.token
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+
+  if (token) {
+    config.headers['Authorization'] = token;
+  }
+
+  return config;
+}

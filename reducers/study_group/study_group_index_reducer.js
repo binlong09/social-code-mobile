@@ -1,6 +1,6 @@
 import {
   GET_STUDY_GROUPS_INDEX,
-  ADD_STUDY_GROUP_INDEX,
+  ADD_STUDY_GROUP,
   STUDY_GROUP_INDEX_LOADING,
 } from '../../actions/types.js';
 
@@ -17,8 +17,11 @@ export default function(state = initialState, action) {
         ...action.payload,
         isLoading: false
       }
-    case ADD_STUDY_GROUP_INDEX:
-
+    case ADD_STUDY_GROUP:
+      return {
+        ...state,
+        isLoading: false
+      }
     case STUDY_GROUP_INDEX_LOADING:
       return {
         ...state,

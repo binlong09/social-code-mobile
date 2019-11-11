@@ -6,9 +6,10 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { items } from '../../../components/study_group/List'
-import firebase from '../../../config/firebase';
 import shrinkImageAsync from '../../../utils/shrinkImageAsync'
 import uploadImageAsync from '../../../utils/uploadImageAsync'
+import { connect } from 'react-redux';
+
 
 export default class NewStudyGroupScreen extends Component {
   constructor(props) {
@@ -18,17 +19,22 @@ export default class NewStudyGroupScreen extends Component {
       name: '',
       class_code: '',
       professor_name: '',
-      date: "October 15th 2019, 08:00 pm",
+      date: null,
       location: '',
       image: null
     };
   }
 
-  componentDidMount() {
-    this.getPermissionAsync();
+  getGalleryPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
   }
 
-  getPermissionAsync = async () => {
+  getCameraPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status !== 'granted') {
@@ -38,6 +44,8 @@ export default class NewStudyGroupScreen extends Component {
   }
 
   _pickImage = async () => {
+    await this.getGalleryPermissionAsync
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -50,6 +58,8 @@ export default class NewStudyGroupScreen extends Component {
   };
 
   _captureImage = async () => {
+    await this.getGalleryPermissionAsync
+
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
