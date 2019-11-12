@@ -1,25 +1,33 @@
 import React, { Component } from "react";
-import { View, StyleSheet, TouchableWithoutFeedback, Image, FlatList } from 'react-native';
-import { Text, Input, Icon, Tile } from 'react-native-elements';
+import { View, StyleSheet, TouchableWithoutFeedback, Image, FlatList, SafeAreaView } from 'react-native';
+import { Text, Input, Icon, Button } from 'react-native-elements';
 import Post from '../../../components/study_group/Post'
+import { HeaderBackButton } from "react-navigation";
+import { connect } from 'react-redux'
+import { getStudyGroupDetail } from '../../../actions/study_group/study_group_detail_actions'
+import NavigationService from '../../../services/NavigationService'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
-const posts = [
-  {
-    id: 1,
-    image_url: "https://images.localist.com/photos/746192/huge/039c008e2501b5024e16245536c29d9028451ca0.jpg",
-    professor_name: "Professor Kim",
-    location: "Glat 112",
-    meeting_time: "Tuesday 8:00PM",
-    class_code: "CS 216",
-    going: true,
-    going_count: 12
-  },
-]
-
-export default class StudyGroupDetailScreen extends Component {
+class StudyGroupDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const title = navigation.getParam('study_group_name')
+    const id = navigation.getParam('id')
     return {
-      title: navigation.getParam('class_code', 'Study Group Detail Screen'),
+      title,
+      headerRight: (
+        <Button
+          onPress={() => NavigationService.navigate('NewStudyGroupPost', { id })}
+          icon={
+            <FontAwesomeIcon
+              name="plus"
+              size={25}
+              color="#f98181"
+            />
+          }
+          buttonStyle={{marginRight: 10}}
+          type="clear"
+        />
+      ),
     };
   };
 
@@ -31,21 +39,26 @@ export default class StudyGroupDetailScreen extends Component {
     }
   }
 
+  componentDidMount() {
+    this.props.getStudyGroupDetail(this.props.navigation.getParam('id'))
+  }
+
   _toggle = () => {
     this.setState({ toggle: !this.state.toggle })
   }
 
   render() {
-    const image_uri = "https://images.localist.com/photos/746192/huge/039c008e2501b5024e16245536c29d9028451ca0.jpg"
+    const {
+      id, class_code, professor_name, location, meeting_time, image_url,
+      study_group_posts, going_count, study_group_name
+    } = this.props.study_group_detail.study_group;
+
     const title = 'Study for exam 1'
 
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <TouchableWithoutFeedback onPress={this._toggle}>
           <View style={styles.titleContainerStyle}>
-            <Text h4={true} style={{ paddingBottom: 5 }}>
-              {title}
-            </Text>
             <Icon
               name='keyboard-arrow-down'
               size={22}
@@ -56,13 +69,16 @@ export default class StudyGroupDetailScreen extends Component {
         </TouchableWithoutFeedback>
         {this.state.toggle ?
           <View style={{ width: '100%', paddingTop: 10 }}>
-            <Image
-              source={{ uri: image_uri }}
-              defaultSource={require('../../../assets/empty_image.png')}
-              style={{ width: '100%', height: 200 }}
-            />
+            {
+              image_url ?
+              <Image
+                source={{ uri: image_url }}
+                style={{ width: '100%', height: 200 }}
+            />: null
+            }
+
             <Input
-              value={"October 15th 2019, 08:00 pm"}
+              value={meeting_time}
               inputContainerStyle={styles.inputContainerStyle}
               leftIcon={
                 <Icon
@@ -77,7 +93,7 @@ export default class StudyGroupDetailScreen extends Component {
             />
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               <Input
-                value={"CS 216"}
+                value={class_code}
                 inputContainerStyle={styles.inputContainerStyle}
                 containerStyle={{ flex: 1 }}
                 leftIcon={
@@ -92,7 +108,7 @@ export default class StudyGroupDetailScreen extends Component {
                 editable={false}
               />
               <Input
-                value={"Professor Kim"}
+                value={professor_name}
                 inputContainerStyle={styles.inputContainerStyle}
                 containerStyle={{ flex: 1 }}
                 leftIcon={
@@ -109,7 +125,7 @@ export default class StudyGroupDetailScreen extends Component {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               <Input
-                value={"Glatfelter 112"}
+                value={location}
                 inputContainerStyle={styles.inputContainerStyle}
                 containerStyle={{ flex: 1 }}
                 leftIcon={
@@ -124,7 +140,7 @@ export default class StudyGroupDetailScreen extends Component {
                 editable={false}
               />
               <Input
-                value={"12 going"}
+                value={`${going_count} going`}
                 inputContainerStyle={styles.inputContainerStyle}
                 containerStyle={{ flex: 1 }}
                 leftIcon={
@@ -148,11 +164,12 @@ export default class StudyGroupDetailScreen extends Component {
           </View>
           : null}
           <FlatList
-            data={posts}
-            renderItem={({item}) => <Post {...this.props.navigation} title={title} />}
+            data={study_group_posts}
+            renderItem={({ item }) => <Post {...item} {...this.props.navigation} title={study_group_name} />}
             keyExtractor={(item, index) => index.toString()}
+            style={{ paddingTop: "3%"}}
           />
-        </View>
+        </SafeAreaView>
 
     )
   }
@@ -167,15 +184,21 @@ const styles = StyleSheet.create({
     marginRight: "5%"
   },
   titleContainerStyle: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
+    // borderBottomColor: 'black',
+    // borderBottomWidth: 1,
     width: "100%",
     marginTop: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   inputContainerStyle: {
     borderBottomWidth: 0,
   },
 })
+
+const mapStateToProps = state => ({
+  study_group_detail: state.study_group_detail
+})
+
+export default connect(mapStateToProps, { getStudyGroupDetail })(StudyGroupDetailScreen)

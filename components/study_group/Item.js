@@ -1,11 +1,13 @@
-import { Ionicons } from "@expo/vector-icons";
 import React, { Component } from "react";
 import { Image, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Button } from 'react-native-elements';
 import { tokenConfig } from '../../actions/auth_actions'
 import { axiosInstance } from '../../services/client'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const defaultImageSize = 136;
+const shortStringCutoff = 16;
+const longStringCutoff = 30;
 
 export default class Item extends Component {
   constructor(props) {
@@ -13,7 +15,9 @@ export default class Item extends Component {
 
     this.state = {
       isGoing: this.props.going,
-      isLoading: false
+      isLoading: false,
+      going_count: this.props.going_count,
+      bookmark_color: 'gray'
     }
   }
 
@@ -23,7 +27,11 @@ export default class Item extends Component {
     const token = tokenConfig()
 
     await axiosInstance.get(`/study_groups/${id}/not_going`, token)
-      .then(() => this.setState({ isGoing: !this.state.isGoing, isLoading: false }))
+      .then(() => this.setState({
+        isGoing: !this.state.isGoing,
+        isLoading: false,
+        going_count: this.state.going_count - 1
+      }))
       .catch(err => console.log(err))
   }
 
@@ -33,36 +41,87 @@ export default class Item extends Component {
     const token = tokenConfig()
 
     await axiosInstance.get(`/study_groups/${id}/going`, token)
-      .then(() => this.setState({ isGoing: !this.state.isGoing, isLoading: false }))
+      .then(() => this.setState({
+        isGoing: !this.state.isGoing,
+        isLoading: false,
+        going_count: this.state.going_count + 1
+      }))
       .catch(err => console.log(err))
+  }
+
+  handleBookmark = () => {
+    const { bookmark_color } = this.state
+    if(bookmark_color == 'gray') {
+      this.setState({ bookmark_color: '#f98181'})
+    } else {
+      this.setState({ bookmark_color: 'gray' })
+    }
+
+  }
+
+  onRemoveBookmark = () => {
+    this.setState({ bookmark_color: '#5663a9' })
+  }
+
+  shortStringProcessor = (string) => {
+    if(string.length >= shortStringCutoff) {
+      string = `${string.substring(0, shortStringCutoff).trim()}... `
+    }
+    return string
+  }
+
+  longStringProcessor = (string) => {
+    if(string.length >= longStringCutoff) {
+      string = `${string.substring(0,longStringCutoff).trim()}... `
+    }
+    return string
   }
 
   render() {
     const {
       id, class_code, professor_name, location,
-      meeting_time, going_count, image_url,
+      meeting_time, image_url, study_group_name
     } = this.props;
 
-    const { isGoing, isLoading } = this.state;
+    const { isGoing, isLoading, going_count } = this.state;
 
     return (
       <View>
-        <TouchableOpacity style={styles.container} onPress={() => this.props.navigation.navigate('StudyGroupDetail', { class_code: class_code })}>
-          <Image style={styles.image} source={{uri: image_url}} />
+        <TouchableOpacity style={styles.container} onPress={() => this.props.navigation.navigate('StudyGroupDetail', { study_group_name, id })}>
+          <Image
+            style={styles.image}
+            source={{uri: image_url}}
+            defaultSource={require('../../assets/no_image_available.png')}
+          />
           <View style={{paddingLeft: 15, paddingRight: 15}}>
-            <Text style={{ fontSize:20, paddingBottom: 5, paddingTop: 5 }}>{class_code}</Text>
-            <Text style={styles.textStyle}>{professor_name}</Text>
-            <Text style={styles.textStyle}>{location}</Text>
+            <Text style={{ fontSize:20, paddingBottom: 5, paddingTop: 5 }}>{this.shortStringProcessor(study_group_name)}</Text>
+            <Text style={styles.textStyle}>{this.longStringProcessor(`${professor_name}, ${class_code}`)}</Text>
+            <Text style={styles.textStyle}>{this.longStringProcessor(location)}</Text>
             <Text style={styles.textStyle}>{meeting_time}</Text>
+            <View style={styles.buttonContainer}>
             {isLoading ?
               <ActivityIndicator size="large" color="#e28e1d" /> :
-              (isGoing ?
-                <Button onPress={this.onCancel(id)} buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/> :
-                <Button onPress={this.onAccept(id)} buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>)
+                (isGoing ?
+                  <Button onPress={this.onCancel(id)} buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/> :
+                  <Button onPress={this.onAccept(id)} buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>)
             }
-            <Text style={styles.textStyle}>With {going_count} others</Text>
+
+            </View>
+            <Text style={styles.goingTextStyle}>With {going_count} others</Text>
           </View>
         </TouchableOpacity>
+        <Button
+            onPress={this.handleBookmark}
+            icon={
+              <Icon
+                name="bookmark"
+                size={30}
+                color={this.state.bookmark_color}
+              />
+            }
+            containerStyle={{ position: 'absolute', right: 0, marginRight: 10 }}
+            type="clear"
+          />
       </View>
     );
   }
@@ -76,7 +135,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius: 10,
     borderWidth: 0.5,
-    marginTop: 10
+    marginTop: 10,
   },
   image: {
     aspectRatio: 1,
@@ -89,16 +148,23 @@ const styles = StyleSheet.create({
   textStyle: {
     paddingBottom: 5
   },
+  goingTextStyle: {
+    paddingBottom: 1
+  },
+  buttonContainer: {
+    flexWrap: 'wrap',
+    flex: 1
+  },
   goingButtonStyle: {
     width: "80%",
-    backgroundColor: '#e28e1d',
-    marginBottom: 10,
-    borderRadius: 10
+    backgroundColor: '#f98181', //#e28e1d
+    marginBottom: 5,
+    borderRadius: 7,
   },
   notGoingbuttonStyle: {
     width: "80%",
     backgroundColor: '#5663a9',
-    marginBottom: 10,
-    borderRadius: 10
+    marginBottom: 5,
+    borderRadius: 7
   }
 });

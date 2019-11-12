@@ -4,8 +4,19 @@ import Card from '../../../components/profile/Card'
 import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from 'react-native-elements';
 import { AsyncStorage } from 'react-native'
+import { HeaderBackButton } from 'react-navigation';
+import NavigationService from '../../../services/NavigationService'
 
 export default class ProfileScreen extends Component {
+  static navigationOptions = {
+    headerLeft:
+      <HeaderBackButton
+        onPress={() => NavigationService.navigate('StudyGroup')}
+        title="Back"
+        backTitleVisible={true}
+      />
+  }
+
   constructor(props) {
     super(props)
   }

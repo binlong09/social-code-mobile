@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet, FlatList, TextInput } from 'react-native'
 import Post from '../../../components/study_group/Post'
 import Comment from '../../../components/study_group/Comment'
+import { HeaderBackButton } from 'react-navigation'
 
 const comments = [
   {
@@ -24,8 +25,9 @@ const comments = [
 
 export default class StudyGroupCommentScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const title = `${navigation.getParam('name')}'s Post`
     return {
-      title: navigation.getParam('title', 'Study Group Comment Screen'),
+      title
     };
   };
 

@@ -14,3 +14,17 @@ export const clearErrors = () => {
     type: CLEAR_ERRORS
   }
 }
+
+export const errorFormatter = (error) => {
+  // original:
+  // {"errors":{"meeting_time":["can't be blank"],"class_code":["can't be blank"]}}
+  error = JSON.stringify(error)
+  error = error.replace(/{/g, "")
+  error = error.replace(/}/g, "")
+  error = error.replace(/\[/g, "")
+  error = error.replace(/\]/g, "")
+  error = error.replace(/:/g, " ")
+  error = error.replace(/\"/g, "")
+  error = error.replace(/_/g, " ")
+  return error;
+}

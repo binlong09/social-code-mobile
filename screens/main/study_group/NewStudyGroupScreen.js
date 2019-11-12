@@ -5,11 +5,11 @@ import DatePicker from 'react-native-datepicker';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import { items } from '../../../components/study_group/List'
 import shrinkImageAsync from '../../../utils/shrinkImageAsync'
 import uploadImageAsync from '../../../utils/uploadImageAsync'
-import { connect } from 'react-redux';
-
+import { axiosInstance } from '../../../services/client';
+import { tokenConfig } from '../../../actions/auth_actions'
+import { errorFormatter } from '../../../actions/errorActions'
 
 export default class NewStudyGroupScreen extends Component {
   constructor(props) {
@@ -21,7 +21,8 @@ export default class NewStudyGroupScreen extends Component {
       professor_name: '',
       date: null,
       location: '',
-      image: null
+      image: null,
+      msg: ''
     };
   }
 
@@ -72,25 +73,30 @@ export default class NewStudyGroupScreen extends Component {
   }
 
   onCreate = async () => {
+    const { image, name, class_code, professor_name, location, date } = this.state
 
-    const { uri: reducedImage, width, height } = await shrinkImageAsync(
-      this.state.image,
-    );
+    let image_url = null
 
-    const image_url  = await uploadImageAsync(reducedImage);
+    if(image) {
+      const { uri: reducedImage, width, height } = await shrinkImageAsync(
+        this.state.image,
+      );
 
-    await items.push({
-      id: 10,
-      class_code: this.state.class_code,
-      image_url: this.state.image,
-      professor_name: this.state.professor_name,
-      location: this.state.location,
-      meeting_time: this.state.date,
-      going: true,
-      going_count: 0
-    })
+      image_url  = await uploadImageAsync(reducedImage);
+    }
 
-    this.props.navigation.navigate('StudyGroup')
+    const new_study_group = {
+      study_group_name: name,
+      class_code: class_code,
+      image_url: image ? image_url : null,
+      professor_name: professor_name,
+      location: location,
+      meeting_time: date,
+    }
+
+    await axiosInstance.post('/study_groups/', new_study_group, tokenConfig())
+      .then(() => this.props.navigation.navigate('StudyGroupDetail'))
+      .catch(err => this.setState({ msg: errorFormatter(err.response.data.errors) }))
   }
 
   render() {
@@ -215,10 +221,12 @@ export default class NewStudyGroupScreen extends Component {
           }
           leftIconContainerStyle={{paddingRight: "5%"}}
         />
+        <Text style={styles.errorText}>{this.state.msg}</Text>
 
         <Button
           title={'CREATE'}
-          containerStyle={{ width: "95%", height: "85%", marginTop: 10}}
+          containerStyle={{ width: "95%", height: "85%", marginTop: 10 }}
+          buttonStyle={styles.submitButtonStyle}
           onPress={this.onCreate}
         />
       </View>
@@ -244,8 +252,7 @@ const styles = StyleSheet.create({
     paddingBottom: "2%"
   },
   submitButtonStyle: {
-    position: "absolute",
-    bottom: 0
+    backgroundColor: '#5663a9'
   },
   image: {
     aspectRatio: 1,
@@ -254,4 +261,10 @@ const styles = StyleSheet.create({
     // height: "%100",
     margin: 10
   },
+  errorText: {
+    color: 'red',
+    fontStyle: 'italic',
+    marginLeft: "5%",
+    marginRight: "5%"
+  }
 });

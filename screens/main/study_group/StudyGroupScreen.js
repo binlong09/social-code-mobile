@@ -16,12 +16,26 @@ import {
 
 class StudyGroupScreen extends Component {
   static navigationOptions = {
-    headerLeft: (
+    headerRight: (
       <Button
         onPress={() => NavigationService.navigate('NewStudyGroup')}
         icon={
           <Icon
             name="plus"
+            size={25}
+            color="#f98181"
+          />
+        }
+        buttonStyle={{marginRight: 10}}
+        type="clear"
+      />
+    ),
+    headerLeft: (
+      <Button
+        onPress={() => NavigationService.navigate('Profile')}
+        icon={
+          <Icon
+            name="user"
             size={25}
             color="#f98181"
           />

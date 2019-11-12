@@ -53,7 +53,7 @@ class AuthScreen extends Component {
         if(this.props.auth.isAuthenticated) {
           this.props.navigation.navigate('StudyGroup');
         } else {
-          this.setState({ msg: this.props.error.msg.error})
+          this.setState({ msg: this.props.error.msg.error })
         }
 
       } else {

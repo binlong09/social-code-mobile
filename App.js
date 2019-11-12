@@ -18,6 +18,7 @@ import StudyGroupScreen from './screens/main/study_group/StudyGroupScreen';
 import StudyGroupDetailScreen from './screens/main/study_group/StudyGroupDetailScreen';
 import StudyGroupCommentScreen from './screens/main/study_group/StudyGroupCommentScreen'
 import NewStudyGroupScreen from './screens/main/study_group/NewStudyGroupScreen';
+import NewStudyGroupPostScreen from './screens/main/study_group/NewStudyGroupPostScreen'
 import AnnouncementScreen from './screens/main/announcement/AnnouncementScreen';
 import RideshareScreen from './screens/main/rideshare/RideshareScreen';
 import CommerceScreen from './screens/main/commerce/CommerceScreen';
@@ -44,20 +45,19 @@ const StudyGroupStack = createStackNavigator({
       headerTitle: 'New Study Group',
     }
   },
-})
-
-StudyGroupStack.navigationOptions = ({ navigation }) => {
-  let tabBarVisible = true;
-  for (let i = 0; i < navigation.state.routes.length; i++) {
-    if (navigation.state.routes[i].routeName == "StudyGroupComment") {
-      tabBarVisible = false;
+  NewStudyGroupPost: {
+    screen: NewStudyGroupPostScreen,
+    navigationOptions: {
+      headerTitle: 'New Post'
+    }
+  },
+  Profile: {
+    screen: ProfileScreen,
+    navigationOptions: {
+      headerTitle: 'Your Profile'
     }
   }
-
-  return {
-    tabBarVisible
-  };
-};
+})
 
 const AnnounmentStack = createStackNavigator({
   Announcement: {
@@ -141,25 +141,30 @@ export default class App extends React.Component {
                  )
             },
           },
-          Profile: {
-            screen: ProfileScreen,
-            navigationOptions: {
-              tabBarLabel: 'Profile',
-              tabBarIcon: ({tintColor, activeTintColor}) => (
-                 <Icon name="account-circle" size={26} color={tintColor} />
-              )
-            },
-          }
+          // Profile: {
+          //   screen: ProfileScreen,
+          //   navigationOptions: {
+          //     tabBarLabel: 'Profile',
+          //     tabBarIcon: ({tintColor, activeTintColor}) => (
+          //        <Icon name="account-circle" size={26} color={tintColor} />
+          //     )
+          //   },
+          // }
         }, {
           tabBarPosition: 'bottom',
           swipeEnabled: true, //swipe between different tabs.
           tabBarOptions: {
             labelStyle: { fontSize: 12 },
+          },
+          defaultNavigationOptions: {
+            tabBarVisible: false
           }
         })
       }
     }, {
       defaultNavigationOptions: {
+        // Set this to false because we do not want to submit app
+        // with placeholder to Apple store
         tabBarVisible: false,
       },
       lazy: true

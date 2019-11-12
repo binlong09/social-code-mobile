@@ -9,44 +9,65 @@ export default class Post extends Component {
 
     this.state = {
       commentModalVisible: false,
-      imageModalVisible: false
+      imageModalVisible: false,
+    }
+  }
+
+  componentDidMount() {
+    // Get the size of the web image
+    if(this.props.image_url) {
+      Image.getSize(this.props.image_url, (width, height) => {
+        this.setState({ width, height });
+      });
     }
   }
 
   render() {
-    const post_image_url = 'https://2.bp.blogspot.com/-gc526LRDxEM/XMGe9dFh2oI/AAAAAAAAPX4/FBrAifdw3XgJaC3xQ6HtdN1MADML1BjywCEwYBhgL/s1600/IMG_0038.jpg'
-    const profile_image_url = 'https://shawetcanada.files.wordpress.com/2019/10/shia-labeouf.jpg?quality=80&strip=all&w=720&h=480&crop=1'
-    const { title } = this.props
+    const {
+      title, content, image_url, comments_count, created_at
+    } = this.props
+
+    const {
+      user_id, name, avatar_url
+    } = this.props.user
+
+    const aspect = this.state.width / this.state.height || 1;
 
     return(
       <View style={styles.outmostContainer}>
         <View style={styles.insideContainer}>
           <Image
             style={styles.profileImageStyle}
-            source={{ uri: profile_image_url }}
+            source={{ uri: avatar_url }}
             defaultSource={require('../../assets/empty_image.png')}
           />
           <View style={styles.userInfoContainerStyle}>
-            <Text style={styles.nameTextStyle}>Shia Labeouf</Text>
-            <Text style={styles.createdAtTextStyle}>May 22 at 8:44 AM</Text>
+          <Text style={styles.nameTextStyle}>{name}</Text>
+            <Text style={styles.createdAtTextStyle}>{created_at}</Text>
           </View>
         </View>
-        <Text style={styles.subtitle}>
-          Here is the review question for exam 1. DO IT!
-        </Text>
-        <ScrollView maximumZoomScale={5} scrollEnabled={true} minimumZoomScale={1} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-          <Image
-            resizeMode="contain"
-            style={styles.postImageStyle}
-            source={{ uri: post_image_url }}
-          />
+        <Text style={styles.subtitle}>{content}</Text>
+        <ScrollView
+        maximumZoomScale={5} scrollEnabled={true} minimumZoomScale={1} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+          {
+            image_url ?
+              <Image
+              resizeMode="contain"
+              style={{
+                aspectRatio: aspect,
+                width: "100%",
+                marginTop: "3%",
+                marginBottom: 10,
+              }}
+              source={{ uri: image_url }}
+            /> : null
+          }
         </ScrollView>
         <TouchableOpacity
-          onPress={() => this.props.navigate('StudyGroupComment', { title: title })}
+          style={{ marginBottom: 2, alignItems: 'flex-end' }}
+          onPress={() => this.props.navigate('StudyGroupComment', { name })}
         >
-          <Text style={styles.commentNumberStyle}>
-            2 comments
-          </Text>
+          <Text style={styles.commentNumberStyle}>{comments_count} comments</Text>
         </TouchableOpacity>
 
       </View>
@@ -59,7 +80,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    paddingTop: "2%",
+    marginBottom: "2%"
   },
   insideContainer: {
     justifyContent: 'flex-start',
@@ -72,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     opacity: 0.8,
     paddingTop: 10,
-    paddingBottom: 8
+    paddingBottom: 3
   },
   userInfoContainerStyle: {
     flexDirection: 'column',
@@ -98,12 +119,6 @@ const styles = StyleSheet.create({
     paddingLeft: 3,
     paddingTop: 3,
     fontWeight: '200'
-  },
-  postImageStyle: {
-    aspectRatio: 1,
-    width: "100%",
-    marginTop: "3%",
-    marginBottom: 10,
   },
   commentNumberStyle: {
     opacity: 0.8,

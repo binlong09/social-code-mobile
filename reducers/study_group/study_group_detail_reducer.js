@@ -1,22 +1,22 @@
 import {
-  GET_STUDY_GROUPS_INDEX,
-  STUDY_GROUP_INDEX_LOADING,
-} from '../../actions/types.js';
+  GET_STUDY_GROUP_DETAIL,
+  STUDY_GROUP_DETAIL_LOADING
+} from '../../actions/types'
 
 const initialState = {
-  study_groups: [],
+  study_group: {},
   isLoading: false
 }
 
 export default function(state = initialState, action) {
   switch(action.type) {
-    case GET_STUDY_GROUPS_INDEX:
+    case GET_STUDY_GROUP_DETAIL:
       return {
         ...state,
         ...action.payload,
-        isLoading: false
+        isLoading: false,
       }
-    case STUDY_GROUP_INDEX_LOADING:
+    case STUDY_GROUP_DETAIL_LOADING:
       return {
         ...state,
         isLoading: true
