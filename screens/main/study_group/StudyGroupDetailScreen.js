@@ -7,13 +7,22 @@ import { connect } from 'react-redux'
 import { getStudyGroupDetail } from '../../../actions/study_group/study_group_detail_actions'
 import NavigationService from '../../../services/NavigationService'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import "abortcontroller-polyfill";
 
 class StudyGroupDetailScreen extends Component {
+  controller = new AbortController();
+
   static navigationOptions = ({ navigation }) => {
     const title = navigation.getParam('study_group_name')
     const id = navigation.getParam('id')
     return {
       title,
+      headerLeft:
+        <HeaderBackButton
+          onPress={() => NavigationService.navigate('StudyGroup')}
+          title="Back"
+          backTitleVisible={true}
+        />,
       headerRight: (
         <Button
           onPress={() => NavigationService.navigate('NewStudyGroupPost', { id })}
@@ -35,8 +44,12 @@ class StudyGroupDetailScreen extends Component {
     super(props)
 
     this.state ={
-      toggle: false
+      toggle: true
     }
+  }
+
+  componentWillUnmount(){
+    this.controller.abort();
   }
 
   componentDidMount() {

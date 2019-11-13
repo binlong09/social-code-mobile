@@ -174,7 +174,10 @@ export default class App extends React.Component {
 
     return (
       <Provider store={store}>
-          <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? 'padding' : 'height'}
+            enabled>
             <Navigation
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
