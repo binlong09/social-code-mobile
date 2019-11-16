@@ -155,8 +155,8 @@ class AuthScreen extends Component {
           </Text> : null
         }
         {signedup ?
-          <Text style={{color: '#fac198', paddingTop: 15, fontStyle: 'italic'}}>
-            Successfully signed up, please login!
+          <Text style={{color: '#fac198', paddingTop: 15, fontStyle: 'italic', textAlign: 'center' }}>
+            Successfully signed up, please check your email for confirmation link!
           </Text> : null}
         <Button
             containerStyle={styles.loginButtonStyle}

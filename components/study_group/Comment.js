@@ -9,14 +9,16 @@ export default class Comment extends Component {
   }
 
   render() {
-    const { content, image_url, name, profile_image_url, created_at } = this.props
+    const { content, image_url, created_at } = this.props
+
+    const { id, name, avatar_url } = this.props.user
 
     return (
       <View style={styles.outmostContainer}>
         <View style={styles.insideContainer}>
           <Image
             style={styles.profileImageStyle}
-            source={{ uri: profile_image_url }}
+            source={{ uri: avatar_url }}
             defaultSource={require('../../assets/empty_image.png')}
           />
           <View style={styles.postWrapStyle}>
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginLeft: "5%",
     marginRight: "5%",
-    marginTop: "5%"
+    marginTop: "3%"
   },
   insideContainer: {
     justifyContent: 'flex-start',

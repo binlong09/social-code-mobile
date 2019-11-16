@@ -9,6 +9,7 @@ import { logout } from '../../../actions/auth_actions'
 import { connect } from 'react-redux';
 import List from '../../../components/study_group/List';
 import NavigationService from '../../../services/NavigationService'
+import { withNavigationFocus } from 'react-navigation'
 import {
   getStudyGroupsIndex,
   addStudyGroupIndex
@@ -53,6 +54,12 @@ class StudyGroupScreen extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if(prevProps.isFocused != this.props.isFocused) {
+      this.props.getStudyGroupsIndex()
+    }
+  }
+
   componentDidMount() {
     this.props.getStudyGroupsIndex()
   }
@@ -86,6 +93,7 @@ class StudyGroupScreen extends Component {
             // onPressFooter={this.onPressFooter}
             data={study_groups}
             {...props}
+            extraData={study_groups}
           />
         }
 
@@ -113,4 +121,4 @@ const mapStateToProps = state => ({
   study_groups: state.study_group_index
 })
 
-export default connect(mapStateToProps, { getStudyGroupsIndex, addStudyGroupIndex })(StudyGroupScreen)
+export default connect(mapStateToProps, { getStudyGroupsIndex, addStudyGroupIndex })(withNavigationFocus(StudyGroupScreen))

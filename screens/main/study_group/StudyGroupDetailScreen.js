@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, StyleSheet, TouchableWithoutFeedback, Image, FlatList, SafeAreaView } from 'react-native';
 import { Text, Input, Icon, Button } from 'react-native-elements';
 import Post from '../../../components/study_group/Post'
-import { HeaderBackButton } from "react-navigation";
+import { HeaderBackButton, withNavigationFocus } from "react-navigation";
 import { connect } from 'react-redux'
 import { getStudyGroupDetail } from '../../../actions/study_group/study_group_detail_actions'
 import NavigationService from '../../../services/NavigationService'
@@ -44,7 +44,14 @@ class StudyGroupDetailScreen extends Component {
     super(props)
 
     this.state ={
-      toggle: true
+      toggle: true,
+      refresh: false
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.isFocused != this.props.isFocused) {
+      this.props.getStudyGroupDetail(this.props.navigation.getParam('id'))
     }
   }
 
@@ -181,6 +188,7 @@ class StudyGroupDetailScreen extends Component {
             renderItem={({ item }) => <Post {...item} {...this.props.navigation} title={study_group_name} />}
             keyExtractor={(item, index) => index.toString()}
             style={{ paddingTop: "3%"}}
+            extraData={study_group_posts}
           />
         </SafeAreaView>
 
@@ -214,4 +222,4 @@ const mapStateToProps = state => ({
   study_group_detail: state.study_group_detail
 })
 
-export default connect(mapStateToProps, { getStudyGroupDetail })(StudyGroupDetailScreen)
+export default connect(mapStateToProps, { getStudyGroupDetail })(withNavigationFocus(StudyGroupDetailScreen))

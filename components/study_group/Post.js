@@ -24,7 +24,7 @@ export default class Post extends Component {
 
   render() {
     const {
-      title, content, image_url, comments_count, created_at
+      id, title, content, image_url, comments_count, created_at
     } = this.props
 
     const {
@@ -65,7 +65,7 @@ export default class Post extends Component {
         </ScrollView>
         <TouchableOpacity
           style={{ marginBottom: 2, alignItems: 'flex-end' }}
-          onPress={() => this.props.navigate('StudyGroupComment', { name })}
+          onPress={() => this.props.navigate('StudyGroupComment', { name, id })}
         >
           <Text style={styles.commentNumberStyle}>{comments_count} comments</Text>
         </TouchableOpacity>

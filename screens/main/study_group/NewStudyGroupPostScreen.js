@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, ImageBackground, Platform, Keyboard } from 'react-native'
+import { View, SafeAreaView, StyleSheet, Text, ImageBackground, Platform } from 'react-native'
 import { Button, Input, Icon } from 'react-native-elements'
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
@@ -10,38 +10,26 @@ import { axiosInstance } from '../../../services/client'
 import { tokenConfig } from '../../../actions/auth_actions'
 import { errorFormatter } from '../../../actions/errorActions'
 
-const numberOfLines = 5
+const numberOfLines = 10
 
 export default class NewStudyGroupPostScreen extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      content: '',
-      image: null
-    }
-  }
-
-  getGalleryPermissionAsync = async () => {
-    if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
-      }
-    }
-  }
-
-  getCameraPermissionAsync = async () => {
-    if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
-      }
+      content: null,
+      image: null,
+      msg: '',
     }
   }
 
   _pickImage = async () => {
-    await this.getGalleryPermissionAsync
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -55,12 +43,17 @@ export default class NewStudyGroupPostScreen extends Component {
   };
 
   _captureImage = async () => {
-    await this.getGalleryPermissionAsync
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
 
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
     })
 
     if (!result.cancelled) {
@@ -101,9 +94,9 @@ export default class NewStudyGroupPostScreen extends Component {
         <Input
             value={content}
             onChangeText={(content) => this.setState({ content })}
-            placeholder={"What's on your brain?"}
+            placeholder={"What's on your mind?"}
             inputContainerStyle={styles.inputContainerStyle}
-            inputStyle={{ minHeight: 100 }}
+            inputStyle={{ minHeight: numberOfLines*20 }}
             multiline={true}
             numberOfLines={Platform.OS === 'ios' ? null : numberOfLines}
             autoFocus={true}
@@ -151,6 +144,7 @@ export default class NewStudyGroupPostScreen extends Component {
               />
             </ImageBackground>
           }
+          <Text style={styles.errorText}>{this.state.msg}</Text>
           <Button
           title={'CREATE POST'}
           containerStyle={{ width: "100%", height: "85%", marginTop: 10 }}
@@ -181,4 +175,10 @@ const styles = StyleSheet.create({
   submitButtonStyle: {
     backgroundColor: '#5663a9'
   },
+  errorText: {
+    color: 'red',
+    fontStyle: 'italic',
+    marginLeft: "5%",
+    marginRight: "5%"
+  }
 })
