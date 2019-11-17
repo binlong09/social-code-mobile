@@ -187,7 +187,7 @@ class StudyGroupDetailScreen extends Component {
             data={study_group_posts}
             renderItem={({ item }) => <Post {...item} {...this.props.navigation} title={study_group_name} />}
             keyExtractor={(item, index) => index.toString()}
-            style={{ paddingTop: "3%"}}
+            style={{ paddingTop: "3%", width: "100%" }}
             extraData={study_group_posts}
           />
         </SafeAreaView>

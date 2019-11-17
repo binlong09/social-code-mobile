@@ -47,22 +47,26 @@ export default class Post extends Component {
           </View>
         </View>
         <Text style={styles.subtitle}>{content}</Text>
-        <ScrollView
-        maximumZoomScale={5} scrollEnabled={true} minimumZoomScale={1} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-          {
-            image_url ?
-              <Image
-              resizeMode="contain"
-              style={{
-                aspectRatio: aspect,
-                width: "100%",
-                marginTop: "3%",
-                marginBottom: 10,
-              }}
-              source={{ uri: image_url }}
-            /> : null
-          }
-        </ScrollView>
+        {
+        image_url ?
+          <ScrollView
+          maximumZoomScale={5}
+          scrollEnabled={true}
+          minimumZoomScale={1}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          >
+            <Image
+            resizeMode="contain"
+            style={{
+              aspectRatio: aspect,
+              width: "100%",
+              marginTop: "3%",
+              marginBottom: 10,
+            }}
+            source={{ uri: image_url }}
+            />
+          </ScrollView> : null }
         <TouchableOpacity
           style={{ marginBottom: 2, alignItems: 'flex-end' }}
           onPress={() => this.props.navigate('StudyGroupComment', { name, id })}
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    marginBottom: "2%"
+    marginBottom: "2%",
   },
   insideContainer: {
     justifyContent: 'flex-start',

@@ -10,27 +10,11 @@ import { connect } from 'react-redux';
 import { tokenConfig } from '../../../actions/auth_actions'
 import { errorFormatter } from '../../../actions/errorActions'
 import { axiosInstance } from '../../../services/client'
-
-const comments = [
-  {
-    id: 1,
-    content: 'This is very helpful. Thanks Shia!',
-    image_url: null,
-    name: 'Kanye East',
-    profile_image_url: 'https://images.complex.com/complex/image/upload/c_limit,dpr_auto,q_90,w_720/fl_lossy,pg_1/kanye-lookalike_gk7c1q.jpg',
-    created_at: '1w'
-  },
-  {
-    id: 2,
-    content: "Thanks Shia. Let's do this!",
-    image_url: 'https://i.ytimg.com/vi/ZXsQAXx_ao0/maxresdefault.jpg',
-    name: 'Chris Pratt',
-    profile_image_url: 'https://i.pinimg.com/originals/4d/84/28/4d84280dba0d5131c3b48832e70f858f.jpg',
-    created_at: '2d'
-  }
-]
+import "abortcontroller-polyfill";
 
 class StudyGroupCommentScreen extends React.Component {
+  controller = new AbortController();
+
   static navigationOptions = ({ navigation }) => {
     const title = `${navigation.getParam('name')}'s Post`
     return {
@@ -68,9 +52,12 @@ class StudyGroupCommentScreen extends React.Component {
 
   }
 
+  componentWillUnmount() {
+    this.controller.abort();
+  }
+
   async componentDidMount() {
-    const myData = this.props.getStudyGroupComments(this.props.navigation.getParam('id'))
-    this.setState({ study_group_comments: myData })
+    this.props.getStudyGroupComments(this.props.navigation.getParam('id'))
   }
 
   render() {
@@ -87,7 +74,6 @@ class StudyGroupCommentScreen extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           extraData={study_group_comments}
           style={{ width: "100%"}}
-          update
         />
         <Input
           containerStyle={styles.inputContainerStyle}

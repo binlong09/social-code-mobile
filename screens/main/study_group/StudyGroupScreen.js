@@ -55,8 +55,11 @@ class StudyGroupScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.isFocused != this.props.isFocused) {
-      this.props.getStudyGroupsIndex()
+    if(typeof this.props.navigation.getParams !== 'undefined') {
+      refresh = this.props.navigation.getParams('refresh')
+      if(refresh && prevProps.isFocused != this.props.isFocused) {
+        this.props.getStudyGroupsIndex()
+      }
     }
   }
 

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Image, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import { tokenConfig } from '../../actions/auth_actions'
 import { axiosInstance } from '../../services/client'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 const defaultImageSize = 136;
 const shortStringCutoff = 16;
@@ -17,7 +17,8 @@ export default class Item extends Component {
       isGoing: this.props.going,
       isLoading: false,
       going_count: this.props.going_count,
-      bookmark_color: 'gray'
+      bookmark_color: 'gray',
+      owned: false,
     }
   }
 
@@ -26,25 +27,29 @@ export default class Item extends Component {
 
     const token = tokenConfig()
 
+    const { isGoing, going_count } = this.state
+
     await axiosInstance.get(`/study_groups/${id}/not_going`, token)
       .then(() => this.setState({
-        isGoing: !this.state.isGoing,
+        isGoing: !isGoing,
         isLoading: false,
-        going_count: this.state.going_count - 1
+        going_count: going_count == 0 ? 0 : going_count - 1
       }))
       .catch(err => console.log(err))
   }
 
-  onAccept = (id) => async() => {
+  onAccept = (id, owned) => async() => {
     this.setState({ isLoading: true })
 
     const token = tokenConfig()
 
+    const { isGoing, going_count } = this.state
+
     await axiosInstance.get(`/study_groups/${id}/going`, token)
       .then(() => this.setState({
-        isGoing: !this.state.isGoing,
+        isGoing: !isGoing,
         isLoading: false,
-        going_count: this.state.going_count + 1
+        going_count: owned ? going_count : going_count + 1
       }))
       .catch(err => console.log(err))
   }
@@ -80,7 +85,7 @@ export default class Item extends Component {
   render() {
     const {
       id, class_code, professor_name, location,
-      meeting_time, image_url, study_group_name
+      meeting_time, image_url, study_group_name, owned
     } = this.props;
 
     const { isGoing, isLoading, going_count } = this.state;
@@ -102,8 +107,8 @@ export default class Item extends Component {
             {isLoading ?
               <ActivityIndicator size="large" color="#e28e1d" /> :
                 (isGoing ?
-                  <Button onPress={this.onCancel(id)} buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/> :
-                  <Button onPress={this.onAccept(id)} buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>)
+                  <Button onPress={this.onCancel(id, owned)} buttonStyle={styles.goingButtonStyle} title={"Accepted!"}/> :
+                  <Button onPress={this.onAccept(id, owned)} buttonStyle={styles.notGoingbuttonStyle} title={"Going?"}/>)
             }
 
             </View>
@@ -113,7 +118,7 @@ export default class Item extends Component {
         <Button
             onPress={this.handleBookmark}
             icon={
-              <Icon
+              <FontAwesomeIcon
                 name="bookmark"
                 size={30}
                 color={this.state.bookmark_color}
@@ -121,7 +126,22 @@ export default class Item extends Component {
             }
             containerStyle={{ position: 'absolute', right: 0, marginRight: 10 }}
             type="clear"
-          />
+        />
+        {owned ?
+        <Button
+          icon={
+            <Icon
+              name="more-vert"
+              size={30}
+              type="material"
+              color="black"
+            />
+          }
+          containerStyle={{ position: 'absolute', bottom: 0, right: 2, marginBottom: "1%" }}
+          type="clear"
+        />
+          : null
+        }
       </View>
     );
   }
