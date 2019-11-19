@@ -24,7 +24,7 @@ export default class Post extends Component {
 
   render() {
     const {
-      id, title, content, image_url, comments_count, created_at
+      id, title, content, image_url, comments_count, created_at, navigation
     } = this.props
 
     const {
@@ -35,7 +35,10 @@ export default class Post extends Component {
 
     return(
       <View style={styles.outmostContainer}>
-        <View style={styles.insideContainer}>
+        <TouchableOpacity
+          style={styles.insideContainer}
+          onPress={() => navigation.navigate('Profile', { owner: false, name, user_id })}
+        >
           <Image
             style={styles.profileImageStyle}
             source={{ uri: avatar_url }}
@@ -45,7 +48,7 @@ export default class Post extends Component {
           <Text style={styles.nameTextStyle}>{name}</Text>
             <Text style={styles.createdAtTextStyle}>{created_at}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
         <Text style={styles.subtitle}>{content}</Text>
         {
         image_url ?

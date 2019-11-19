@@ -43,8 +43,10 @@ class StudyGroupDetailScreen extends Component {
   constructor(props) {
     super(props)
 
+    const post_count = this.props.navigation.getParam('post_count')
+
     this.state ={
-      toggle: true,
+      toggle: post_count == 0 ? true : false,
       refresh: false
     }
   }
@@ -73,7 +75,7 @@ class StudyGroupDetailScreen extends Component {
       study_group_posts, going_count, study_group_name
     } = this.props.study_group_detail.study_group;
 
-    const title = 'Study for exam 1'
+    const { ...props } = this.props
 
     return (
       <SafeAreaView style={styles.container}>
@@ -185,7 +187,7 @@ class StudyGroupDetailScreen extends Component {
           : null}
           <FlatList
             data={study_group_posts}
-            renderItem={({ item }) => <Post {...item} {...this.props.navigation} title={study_group_name} />}
+            renderItem={({ item }) => <Post {...item} {...props} {...this.props.navigation} title={study_group_name} />}
             keyExtractor={(item, index) => index.toString()}
             style={{ paddingTop: "3%", width: "100%" }}
             extraData={study_group_posts}

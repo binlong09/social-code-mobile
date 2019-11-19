@@ -33,7 +33,7 @@ class StudyGroupScreen extends Component {
     ),
     headerLeft: (
       <Button
-        onPress={() => NavigationService.navigate('Profile')}
+        onPress={() => NavigationService.navigate('Profile', { owner: true })}
         icon={
           <Icon
             name="user"

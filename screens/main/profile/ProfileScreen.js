@@ -8,22 +8,27 @@ import { HeaderBackButton } from 'react-navigation';
 import NavigationService from '../../../services/NavigationService'
 
 export default class ProfileScreen extends Component {
-  static navigationOptions = {
-    headerLeft:
-      <HeaderBackButton
-        onPress={() => NavigationService.navigate('StudyGroup')}
-        title="Back"
-        backTitleVisible={true}
-      />
+  static navigationOptions = ({ navigation }) => {
+    const isOwner = navigation.getParam('owner')
+    const title = isOwner ? "Your Profile" : `${navigation.getParam('name')}'s Profile`
+    return {
+      title,
+      headerRight:
+        <Button
+          onPress={async() => {
+            await AsyncStorage.clear()
+            navigation.navigate({ routeName: 'auth'})
+          }}
+          title="Logout"
+          buttonStyle={{marginRight: 10}}
+          type="clear"
+        />
+
+    }
   }
 
   constructor(props) {
     super(props)
-  }
-
-  logout = async () => {
-    await AsyncStorage.clear()
-    this.props.navigation.navigate('auh')
   }
 
   render() {

@@ -52,10 +52,7 @@ const StudyGroupStack = createStackNavigator({
     }
   },
   Profile: {
-    screen: ProfileScreen,
-    navigationOptions: {
-      headerTitle: 'Your Profile'
-    }
+    screen: ProfileScreen
   }
 })
 

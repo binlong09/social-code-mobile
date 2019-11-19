@@ -6,7 +6,7 @@ import { axiosInstance } from '../../services/client'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 const defaultImageSize = 136;
-const shortStringCutoff = 16;
+const shortStringCutoff = 14;
 const longStringCutoff = 30;
 
 export default class Item extends Component {
@@ -85,14 +85,14 @@ export default class Item extends Component {
   render() {
     const {
       id, class_code, professor_name, location,
-      meeting_time, image_url, study_group_name, owned
+      meeting_time, image_url, study_group_name, owned, post_count
     } = this.props;
 
     const { isGoing, isLoading, going_count } = this.state;
 
     return (
       <View>
-        <TouchableOpacity style={styles.container} onPress={() => this.props.navigation.navigate('StudyGroupDetail', { study_group_name, id })}>
+        <TouchableOpacity style={styles.container} onPress={() => this.props.navigation.navigate('StudyGroupDetail', { study_group_name, id, post_count })}>
           <Image
             style={styles.image}
             source={{uri: image_url}}

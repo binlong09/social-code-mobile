@@ -90,7 +90,7 @@ export default class NewStudyGroupScreen extends Component {
     await axiosInstance.post('/study_groups/', new_study_group, tokenConfig())
       .then((res) => {
         const id = res.data.study_group.id
-        this.props.navigation.navigate('StudyGroupDetail', { id, study_group_name: name, refresh: true })
+        this.props.navigation.navigate('StudyGroupDetail', { id, study_group_name: name, refresh: true, post_count: 0 })
       })
       .catch(err => this.setState({ msg: errorFormatter(err.response.data.errors) }))
   }
