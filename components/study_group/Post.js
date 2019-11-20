@@ -24,12 +24,13 @@ export default class Post extends Component {
 
   render() {
     const {
-      id, title, content, image_url, comments_count, created_at, navigation
+      id, title, content, image_url, comments_count, created_at, navigation,
     } = this.props
 
     const {
       user_id, name, avatar_url
     } = this.props.user
+
 
     const aspect = this.state.width / this.state.height || 1;
 
@@ -42,7 +43,7 @@ export default class Post extends Component {
           <Image
             style={styles.profileImageStyle}
             source={{ uri: avatar_url }}
-            defaultSource={require('../../assets/empty_image.png')}
+            defaultSource={require('../../assets/default_profile_image.jpg')}
           />
           <View style={styles.userInfoContainerStyle}>
           <Text style={styles.nameTextStyle}>{name}</Text>

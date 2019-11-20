@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import NavigationService from '../../services/NavigationService'
 
 const defaultImageSize = 36;
 
@@ -11,16 +12,20 @@ export default class Comment extends Component {
   render() {
     const { content, image_url, created_at } = this.props
 
-    const { id, name, avatar_url } = this.props.user
+    const { user_id, name, avatar_url } = this.props.user
 
     return (
       <View style={styles.outmostContainer}>
         <View style={styles.insideContainer}>
-          <Image
-            style={styles.profileImageStyle}
-            source={{ uri: avatar_url }}
-            defaultSource={require('../../assets/empty_image.png')}
-          />
+          <TouchableOpacity
+            onPress={() => NavigationService.navigate('Profile', { owner: false, name, user_id })}
+          >
+            <Image
+              style={styles.profileImageStyle}
+              source={{ uri: avatar_url }}
+              defaultSource={require('../../assets/default_profile_image.jpg')}
+            />
+          </TouchableOpacity>
           <View style={styles.postWrapStyle}>
             <View style={styles.postContentStyle}>
               <Text style={styles.nameTextStyle}>{name}</Text>
@@ -46,9 +51,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     flexDirection: 'column',
-    marginLeft: "5%",
-    marginRight: "5%",
-    marginTop: "3%"
+    // marginLeft: "2%",
+    marginRight: "2%",
+    marginBottom: "3%"
   },
   insideContainer: {
     justifyContent: 'flex-start',
@@ -62,7 +67,7 @@ const styles = StyleSheet.create({
     borderRadius: defaultImageSize / 2,
     width: defaultImageSize,
     height: defaultImageSize,
-    marginRight: 5
+    margin: 5
   },
   postWrapStyle: {
     flexDirection: 'column',
@@ -72,10 +77,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'gray',
     backgroundColor: '#f2f2f2',
-    paddingRight: 8,
-    paddingLeft: 8,
-    paddingTop: 8,
-    paddingBottom: 8
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingRight: 10,
+    paddingLeft: 5
   },
   contentStyle: {
     fontSize: 13,

@@ -94,7 +94,7 @@ class StudyGroupScreen extends Component {
         <View style={styles.container}>
         <SearchBar
           platform="ios"
-          placeholder="Search here..."
+          placeholder="What are you looking for?"
           onChangeText={(search_field) => this.setState({ search_field })}
           value={this.state.search_field}
           onSubmitEditing={this.onSearchSubmit}

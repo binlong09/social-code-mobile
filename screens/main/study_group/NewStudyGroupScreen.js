@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, TextInput, Image, ImageBackground } from 'react-native'
+import { Text, View, StyleSheet, Image, ImageBackground } from 'react-native'
 import { Button, Input, Icon } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import * as ImagePicker from 'expo-image-picker';
