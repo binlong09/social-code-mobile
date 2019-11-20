@@ -3,7 +3,7 @@ import {
   StyleSheet, Text, View, SafeAreaView, AsyncStorage,
   LayoutAnimation, ActivityIndicator, RefreshControl
 } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Button, SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { logout } from '../../../actions/auth_actions'
 import { connect } from 'react-redux';
@@ -12,8 +12,9 @@ import NavigationService from '../../../services/NavigationService'
 import { withNavigationFocus } from 'react-navigation'
 import {
   getStudyGroupsIndex,
-  addStudyGroupIndex
+  searchStudyGroup
 } from '../../../actions/study_group/study_group_index_actions'
+import { axiosInstance } from '../../../services/client';
 
 class StudyGroupScreen extends Component {
   static navigationOptions = {
@@ -50,7 +51,8 @@ class StudyGroupScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      study_groups: {}
+      study_groups: {},
+      search_field: ""
     }
   }
 
@@ -76,6 +78,12 @@ class StudyGroupScreen extends Component {
     this.props.getStudyGroupsIndex()
   }
 
+  onSearchSubmit = () => {
+    const { search_field } = this.state
+
+    this.props.searchStudyGroup(search_field)
+  }
+
   render() {
     const { ...props } = this.props;
     const { isLoading, study_groups } = this.props.study_groups;
@@ -84,6 +92,14 @@ class StudyGroupScreen extends Component {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
+        <SearchBar
+          platform="ios"
+          placeholder="Search here..."
+          onChangeText={(search_field) => this.setState({ search_field })}
+          value={this.state.search_field}
+          onSubmitEditing={this.onSearchSubmit}
+          onClear={this.fetchStudyGroups}
+        />
         {isLoading?
           <ActivityIndicator size="large" color="#e28e1d" /> :
           <List
@@ -124,4 +140,4 @@ const mapStateToProps = state => ({
   study_groups: state.study_group_index
 })
 
-export default connect(mapStateToProps, { getStudyGroupsIndex, addStudyGroupIndex })(withNavigationFocus(StudyGroupScreen))
+export default connect(mapStateToProps, { getStudyGroupsIndex, searchStudyGroup })(withNavigationFocus(StudyGroupScreen))

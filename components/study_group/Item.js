@@ -13,11 +13,13 @@ export default class Item extends Component {
   constructor(props) {
     super(props)
 
+    const { going, going_count, bookmarked } = this.props
+
     this.state = {
-      isGoing: this.props.going,
+      isGoing: going,
       isLoading: false,
-      going_count: this.props.going_count,
-      bookmark_color: 'gray',
+      going_count: going_count,
+      bookmark_color: bookmarked ? '#f98181' : 'gray',
       owned: false,
     }
   }
@@ -54,18 +56,20 @@ export default class Item extends Component {
       .catch(err => console.log(err))
   }
 
-  handleBookmark = () => {
+  onBookmark = (id) => async() => {
+    const token = tokenConfig()
+
     const { bookmark_color } = this.state
     if(bookmark_color == 'gray') {
-      this.setState({ bookmark_color: '#f98181'})
+      await axiosInstance.get(`/study_groups/${id}/create_bookmark`, token)
+        .then(() => this.setState({ bookmark_color: '#f98181'}))
+        .catch(err => console.log(err))
     } else {
-      this.setState({ bookmark_color: 'gray' })
+      await axiosInstance.get(`/study_groups/${id}/delete_bookmark`, token)
+        .then(() => this.setState({ bookmark_color: 'gray'}))
+        .catch(err => console.log(err))
     }
 
-  }
-
-  onRemoveBookmark = () => {
-    this.setState({ bookmark_color: '#5663a9' })
   }
 
   shortStringProcessor = (string) => {
@@ -116,7 +120,7 @@ export default class Item extends Component {
           </View>
         </TouchableOpacity>
         <Button
-            onPress={this.handleBookmark}
+            onPress={this.onBookmark(id)}
             icon={
               <FontAwesomeIcon
                 name="bookmark"
@@ -127,7 +131,7 @@ export default class Item extends Component {
             containerStyle={{ position: 'absolute', right: 0, marginRight: 10 }}
             type="clear"
         />
-        {owned ?
+        {/* {owned ?
         <Button
           icon={
             <Icon
@@ -141,7 +145,7 @@ export default class Item extends Component {
           type="clear"
         />
           : null
-        }
+        } */}
       </View>
     );
   }

@@ -33,12 +33,7 @@ export default class ProfileScreen extends Component {
 
   render() {
     return (
-      // <LinearGradient
-      //   colors={['#fac198','#ebb798','#e3b398','#c49f98','#ab9198','#928197','#847898']}
-      //   style={{ flex: 1 }}>
-      // >
         <SafeAreaView>
-          {/* <Card /> */}
           <Button
             title="Logout"
             onPress={this.logout}

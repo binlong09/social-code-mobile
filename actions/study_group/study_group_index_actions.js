@@ -25,6 +25,26 @@ export const getStudyGroupsIndex = () => (dispatch) => {
     );
 }
 
+export const searchStudyGroup = (search_field) => (dispatch) => {
+  dispatch({
+    type: STUDY_GROUP_INDEX_LOADING
+  })
+
+  const token = tokenConfig()
+
+  axiosInstance.get(`/study_groups/search?q=${search_field}`, token)
+    .then(res => {
+      dispatch({
+        type: GET_STUDY_GROUPS_INDEX,
+        payload: res.data
+      })}
+    )
+    .catch(err =>
+      // TBD Show error
+      console.log(err)
+    );
+}
+
 export const setStudyGroupLoading = () => {
   return {
     type: STUDY_GROUP_LOADING
