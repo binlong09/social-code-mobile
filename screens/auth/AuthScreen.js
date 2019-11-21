@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Text, View, Image, AsyncStorage } from 'react-native';
+import { Text, View, Image, AsyncStorage, ImageBackground } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { LinearGradient } from 'expo-linear-gradient';
 import { connect } from 'react-redux';
 import { login } from '../../actions/auth_actions'
 import store from '../../store/'
@@ -85,16 +84,12 @@ class AuthScreen extends Component {
     const { signedup } = this.props.auth;
 
     return (
-      <LinearGradient
-        // colors={['#304768','#374A6A','#3C4D6C','#3F4E6D','#414E6D','#465170']}
-        colors={['#fac198','#ebb798','#e3b398','#c49f98','#ab9198','#928197','#847898']}
-        style={styles.container}>
-        <Image
-          // source={require('../../assets/logoFull.png')}
-          source={require('../../assets/social_code.png')}
-          style={styles.logo}
-        />
-        <View style={{alignItems: 'center', marginTop: 30}}>
+      <ImageBackground
+        source={require('../../assets/gradient-background.png')}
+        style={styles.container}
+        imageStyle={{ resizeMode: 'cover' }}
+      >
+        <View style={{alignItems: 'center', marginTop: 60}}>
           <Text
             style={styles.bigWelcomeText}
           >
@@ -140,7 +135,7 @@ class AuthScreen extends Component {
         >
         </Input>
         {this.state.msg ?
-          <Text style={{color: '#f4b20b', paddingTop: 10, fontStyle: 'italic'}}>
+          <Text style={{color: 'red', paddingTop: 10, fontStyle: 'italic'}}>
             {this.state.msg}
           </Text> : null
         }
@@ -155,7 +150,7 @@ class AuthScreen extends Component {
           </Text> : null
         }
         {signedup ?
-          <Text style={{color: '#fac198', paddingTop: 15, fontStyle: 'italic', textAlign: 'center' }}>
+          <Text style={{color: 'green', paddingTop: 15, fontStyle: 'italic', textAlign: 'center' }}>
             Successfully signed up, please check your email for confirmation link!
           </Text> : null}
         <Button
@@ -180,7 +175,7 @@ class AuthScreen extends Component {
             Forgot password?
           </Text>
         </View>
-      </LinearGradient>
+      </ImageBackground>
     )
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Platform, KeyboardAvoidingView, StatusBar } from 'react-native';
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -175,6 +175,7 @@ export default class App extends React.Component {
             style={styles.container}
             behavior={Platform.OS === "ios" ? 'padding' : 'height'}
             enabled>
+            <StatusBar />
             <Navigation
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);

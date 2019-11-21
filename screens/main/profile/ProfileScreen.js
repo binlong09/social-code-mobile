@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity } from 'react-native'
-import { Button } from 'react-native-elements';
+import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, FlatList, ScrollView } from 'react-native'
+import { Button, Icon } from 'react-native-elements';
 import { AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import { getProfile } from '../../../actions/profile/profile_actions'
@@ -14,6 +14,7 @@ import * as Permissions from 'expo-permissions';
 import shrinkImageAsync from '../../../utils/shrinkImageAsync'
 import uploadImageAsync from '../../../utils/uploadImageAsync'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import Item from '../../../components/study_group/Item'
 
 const defaultImageSize = 136;
 
@@ -48,7 +49,10 @@ class ProfileScreen extends Component {
       avatar_url: null,
       orignal_user: {},
       checkmark: false,
-      image: null
+      image: null,
+      bookmark_toggle: false,
+      going_toggle: false,
+      created_toggle: false
     }
   }
 
@@ -142,19 +146,35 @@ class ProfileScreen extends Component {
     return { name, graduation_date, major, phone_number }
   }
 
-  render() {
-    const { name, email, graduation_date, major, avatar_url, phone_number, checkmark, image } = this.state
+  _toggle_going = () => {
+    this.setState({ going_toggle: !this.state.going_toggle })
+  }
 
-    const { id, bookmarked_study_groups, created_study_groups, going_study_groups } = this.props.user
+  _toggle_bookmarked = () => {
+    this.setState({ bookmark_toggle: !this.state.bookmark_toggle })
+  }
+
+  _toggle_created = () => {
+    this.setState({ created_toggle: !this.state.created_toggle })
+  }
+
+  render() {
+    const {
+      name, email, graduation_date, major, avatar_url, phone_number, checkmark, image,
+      going_toggle, bookmark_toggle, created_toggle
+    } = this.state
+
+    const {
+      id, bookmarked_study_groups, created_study_groups, going_study_groups,
+    } = this.props.user
+
+    const { ...props } = this.props
 
     const owner = this.props.navigation.getParam('owner')
 
     return (
+      <View style={{ flex: 1 }}>
         <SafeAreaView style={styles.outmostContainer}>
-          {/* <LinearGradient
-            colors={['#f0d8cc', '#edd7cc', '#edd7cc', '#e6d2cc', '#e5d1cc','#e3d0cc']}
-            style={styles.insideContainer}
-          > */}
           <View style={styles.insideContainer}>
           <TouchableOpacity onPress={this._pickImage}>
               <Image
@@ -221,13 +241,61 @@ class ProfileScreen extends Component {
                 style={styles.inputContainerStyle}
                 placeholder={owner ? 'Phone number' : '' }
               />
-
             </View>
 
-          {/* </LinearGradient> */}
+
           </View>
         </SafeAreaView>
+        <ScrollView style={{ marginLeft: 10, marginRight: 10, marginBottom: 10 }}>
+          <TouchableOpacity onPress={this._toggle_going} style={{ flexDirection: 'row'}}>
+            <Icon
+              name='keyboard-arrow-down'
+              size={25}
+            />
+            <Text style={{ paddingTop: 3 }}>Going To Items:</Text>
+          </TouchableOpacity>
+          {going_toggle ?
+            <FlatList
+             data={going_study_groups}
+             renderItem={({ item }) => <Item {...item} {...props} {...this.props.navigation} />}
+             keyExtractor={(item, index) => index.toString()}
+             {...props}
+            /> : null
+          }
+          <TouchableOpacity onPress={this._toggle_bookmarked} style={{ flexDirection: 'row'}}>
+            <Icon
+              name='keyboard-arrow-down'
+              size={25}
+            />
+            <Text style={{ paddingTop: 3 }}>Bookmarked Items:</Text>
+          </TouchableOpacity>
+          {bookmark_toggle ?
+            <FlatList
+             data={bookmarked_study_groups}
+             renderItem={({ item }) => <Item {...item} {...props} {...this.props.navigation} />}
+             keyExtractor={(item, index) => index.toString()}
+             {...props}
+            /> : null
+          }
+          <TouchableOpacity onPress={this._toggle_created} style={{ flexDirection: 'row'}}>
+            <Icon
+              name='keyboard-arrow-down'
+              size={25}
+            />
+            <Text style={{ paddingTop: 3 }}>Created Items:</Text>
+          </TouchableOpacity>
+          {created_toggle ?
+            <FlatList
+             data={created_study_groups}
+             renderItem={({ item }) => <Item {...item} {...props} {...this.props.navigation} />}
+             keyExtractor={(item, index) => index.toString()}
+             {...props}
+            /> : null
+          }
 
+        </ScrollView>
+
+        </View>
     )
   }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet, TouchableWithoutFeedback, Image, FlatList, SafeAreaView } from 'react-native';
-import { Text, Input, Icon, Button } from 'react-native-elements';
+import { Input, Icon, Button } from 'react-native-elements';
 import Post from '../../../components/study_group/Post'
 import { HeaderBackButton, withNavigationFocus } from "react-navigation";
 import { connect } from 'react-redux'
