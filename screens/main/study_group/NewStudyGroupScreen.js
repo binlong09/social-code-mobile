@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Image, ImageBackground } from 'react-native'
+import { Text, View, StyleSheet, Image, ImageBackground, SafeAreaView, Platform } from 'react-native'
 import { Button, Input, Icon } from 'react-native-elements';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import DatePicker from 'react-native-datepicker';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
@@ -10,22 +11,37 @@ import uploadImageAsync from '../../../utils/uploadImageAsync'
 import { axiosInstance } from '../../../services/client';
 import { tokenConfig } from '../../../actions/auth_actions'
 import { errorFormatter } from '../../../actions/errorActions'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default class NewStudyGroupScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      name: '',
-      class_code: '',
-      professor_name: '',
-      date: null,
-      location: '',
-      image: null,
-      msg: ''
-    };
-  }
+    if (typeof this.props.navigation.getParam('study_group_object') !== 'undefined') {
+      const { name, class_code, professor_name, meeting_time, image_url, id, location } = this.props.navigation.getParam('study_group_object')
 
+      this.state = {
+        id, name, class_code, professor_name, location,
+        date: meeting_time,
+        image: image_url,
+        edit: true
+      }
+
+      console.log(this.state)
+    } else {
+      this.state = {
+        id: null,
+        name: '',
+        class_code: '',
+        professor_name: '',
+        date: null,
+        location: '',
+        image: null,
+        edit: false,
+        msg: ''
+      };
+    }
+  }
 
   _pickImage = async () => {
     if (Constants.platform.ios) {
@@ -65,8 +81,8 @@ export default class NewStudyGroupScreen extends Component {
     }
   }
 
-  onCreate = async () => {
-    const { image, name, class_code, professor_name, location, date } = this.state
+  onSubmit = async () => {
+    const { image, name, class_code, professor_name, location, date, id, edit } = this.state
 
     let image_url = null
 
@@ -87,23 +103,34 @@ export default class NewStudyGroupScreen extends Component {
       meeting_time: date,
     }
 
-    await axiosInstance.post('/study_groups/', new_study_group, tokenConfig())
+    if(edit) {
+      await axiosInstance.patch(`/study_groups/${id}`, new_study_group, tokenConfig())
       .then((res) => {
         const id = res.data.study_group.id
         this.props.navigation.navigate('StudyGroupDetail', { id, study_group_name: name, refresh: true, post_count: 0 })
       })
       .catch(err => this.setState({ msg: errorFormatter(err.response.data.errors) }))
+    } else {
+      await axiosInstance.post('/study_groups/', new_study_group, tokenConfig())
+      .then((res) => {
+        const id = res.data.study_group.id
+        this.props.navigation.navigate('StudyGroupDetail', { id, study_group_name: name, refresh: true, post_count: 0 })
+      })
+      .catch(err => this.setState({ msg: errorFormatter(err.response.data.errors) }))
+    }
+
   }
 
   render() {
-    const { image } = this.state;
+    const { image, edit } = this.state;
 
     return (
-      <View style={styles.container}>
+      <KeyboardAwareScrollView>
+        <SafeAreaView style={styles.container}>
         {!image ?
           <ImageBackground
             source={require('../../../assets/empty_image.png')}
-            style={{width: '100%', height: 200, alignItems: 'center' }}
+            style={{width: '100%', height: 200, alignItems: 'center', marginTop: 400 }}
           >
           <Button
             title="Pick a photo"
@@ -132,7 +159,7 @@ export default class NewStudyGroupScreen extends Component {
           </ImageBackground> :
           <ImageBackground
             source={{ uri: image }}
-            style={{width: '100%', height: 200 }}
+            style={{width: ' 100%', height: 200, marginTop: 400  }}
           >
             <Button
               onPress={this._pickImage}
@@ -219,14 +246,16 @@ export default class NewStudyGroupScreen extends Component {
         />
         <Text style={styles.errorText}>{this.state.msg}</Text>
 
+
         <Button
-          title={'CREATE'}
+          title={edit ? 'UPDATE' : 'CREATE'}
           containerStyle={{ width: "95%", height: "85%", marginTop: 10 }}
           buttonStyle={styles.submitButtonStyle}
-          onPress={this.onCreate}
+          onPress={this.onSubmit}
         />
-      </View>
-
+        <View style={{ flex : 1, backgroundColor: 'blue', width: '100%' }} />
+        </SafeAreaView>
+        </KeyboardAwareScrollView>
     )
   }
 }
@@ -235,9 +264,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     marginLeft: "5%",
     marginRight: "5%",
+    // backgroundColor: 'red',
+    // marginTop: '60%'
   },
   inputNameStyle: {
     marginTop: "5%",

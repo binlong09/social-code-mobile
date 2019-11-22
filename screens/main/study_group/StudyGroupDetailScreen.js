@@ -72,10 +72,16 @@ class StudyGroupDetailScreen extends Component {
   render() {
     const {
       id, class_code, professor_name, location, meeting_time, image_url,
-      study_group_posts, going_count, study_group_name
+      study_group_posts, going_count, study_group_name, owned, origin_meeting_time
     } = this.props.study_group_detail.study_group;
 
-    const { ...props } = this.props
+    const study_group_object = {
+      id, class_code, professor_name, location,
+      meeting_time: origin_meeting_time, image_url,
+      name: study_group_name
+    }
+
+    const { navigation, ...props} = this.props
 
     return (
       <SafeAreaView style={styles.container}>
@@ -177,6 +183,21 @@ class StudyGroupDetailScreen extends Component {
                 editable={false}
               />
             </View>
+            {owned ?
+              <Button
+                onPress={() => navigation.navigate('NewStudyGroup', { study_group_object, edit: true })}
+                icon={
+                  <FontAwesomeIcon
+                    name="edit"
+                    size={25}
+                    color="#f98181"
+                  />
+                }
+                containerStyle={{ position: 'absolute', bottom: 0, right: 0}}
+                type="clear"
+              /> : null
+            }
+
             <View
               style={{
                 borderBottomColor: 'black',
