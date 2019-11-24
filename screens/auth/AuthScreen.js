@@ -89,7 +89,7 @@ class AuthScreen extends Component {
         style={styles.container}
         imageStyle={{ resizeMode: 'cover' }}
       >
-        <View style={{alignItems: 'center', marginTop: 60}}>
+        <View style={{alignItems: 'center', marginTop: 100}}>
           <Text
             style={styles.bigWelcomeText}
           >

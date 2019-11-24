@@ -9,6 +9,7 @@ import uploadImageAsync from '../../../utils/uploadImageAsync'
 import { axiosInstance } from '../../../services/client'
 import { tokenConfig } from '../../../actions/auth_actions'
 import { errorFormatter } from '../../../actions/errorActions'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const numberOfLines = 10
 
@@ -90,68 +91,70 @@ export default class NewStudyGroupPostScreen extends Component {
     const { id } = this.props.navigation.state.params
 
     return (
-      <SafeAreaView style={styles.container}>
-        <Input
-            value={content}
-            onChangeText={(content) => this.setState({ content })}
-            placeholder={"What's on your mind?"}
-            inputContainerStyle={styles.inputContainerStyle}
-            inputStyle={{ minHeight: numberOfLines*20 }}
-            multiline={true}
-            numberOfLines={Platform.OS === 'ios' ? null : numberOfLines}
-            autoFocus={true}
-          />
+      <KeyboardAwareScrollView>
+        <SafeAreaView style={styles.container}>
+          <Input
+              value={content}
+              onChangeText={(content) => this.setState({ content })}
+              placeholder={"What's on your mind?"}
+              inputContainerStyle={styles.inputContainerStyle}
+              inputStyle={{ minHeight: numberOfLines*20 }}
+              multiline={true}
+              numberOfLines={Platform.OS === 'ios' ? null : numberOfLines}
+              autoFocus={true}
+            />
 
-          {!image ?
-            <ImageBackground
-              source={require('../../../assets/empty_image.png')}
-              style={{width: '100%', height: 200, alignItems: 'center' }}
-            >
-            <Button
-              title="Pick a photo"
-              onPress={this._pickImage}
-              style={{ borderWidth: "1", borderColor: 'white', marginTop: "15%" }}
-              titleStyle={{color: "white"}}
-              type="clear"
-              icon={{
-                name: "photo",
-                size: 20,
-                color: "white"
-              }}
-            />
-            <Button
-              title="Use Camera"
-              onPress={this._captureImage}
-              style={{ borderWidth: "1", borderColor: 'white', marginTop: "5%" }}
-              titleStyle={{color: "white"}}
-              type="clear"
-              icon={{
-                name: "camera-alt",
-                size: 20,
-                color: "white"
-              }}
-            />
-            </ImageBackground> :
-            <ImageBackground
-              source={{ uri: image }}
-              style={{width: '100%', height: 200 }}
-            >
+            {!image ?
+              <ImageBackground
+                source={require('../../../assets/empty_image.png')}
+                style={{width: '100%', height: 200, alignItems: 'center' }}
+              >
               <Button
+                title="Pick a photo"
                 onPress={this._pickImage}
-                style={{ height: "100%", width: "100%", borderWidth: "1", borderColor: 'white',  }}
+                style={{ borderWidth: "1", borderColor: 'white', marginTop: "15%" }}
                 titleStyle={{color: "white"}}
                 type="clear"
+                icon={{
+                  name: "photo",
+                  size: 20,
+                  color: "white"
+                }}
               />
-            </ImageBackground>
-          }
-          <Text style={styles.errorText}>{this.state.msg}</Text>
-          <Button
-          title={'CREATE POST'}
-          containerStyle={{ width: "100%", height: "85%", marginTop: 10 }}
-          buttonStyle={styles.submitButtonStyle}
-          onPress={this.onCreate(id)}
-        />
-      </SafeAreaView>
+              <Button
+                title="Use Camera"
+                onPress={this._captureImage}
+                style={{ borderWidth: "1", borderColor: 'white', marginTop: "5%" }}
+                titleStyle={{color: "white"}}
+                type="clear"
+                icon={{
+                  name: "camera-alt",
+                  size: 20,
+                  color: "white"
+                }}
+              />
+              </ImageBackground> :
+              <ImageBackground
+                source={{ uri: image }}
+                style={{width: '100%', height: 200 }}
+              >
+                <Button
+                  onPress={this._pickImage}
+                  style={{ height: "100%", width: "100%", borderWidth: "1", borderColor: 'white',  }}
+                  titleStyle={{color: "white"}}
+                  type="clear"
+                />
+              </ImageBackground>
+            }
+            <Text style={styles.errorText}>{this.state.msg}</Text>
+            <Button
+            title={'CREATE POST'}
+            containerStyle={{ width: "100%", height: "85%", marginTop: 10 }}
+            buttonStyle={styles.submitButtonStyle}
+            onPress={this.onCreate(id)}
+          />
+        </SafeAreaView>
+      </KeyboardAwareScrollView>
     )
 
   }

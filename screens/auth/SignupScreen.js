@@ -29,6 +29,7 @@ class SignupScreen extends Component {
   }
 
    onSignup = async () => {
+     this.setState({ loading: true })
     const { email, name, password } = this.state;
 
     await this.props.signup({name, email, password});
@@ -37,6 +38,7 @@ class SignupScreen extends Component {
     } else {
       this.setState({ msg: this.props.error.msg.errors[0]})
     }
+    this.setState({ loading: false })
   }
 
   onSignin = () => {
@@ -51,7 +53,7 @@ class SignupScreen extends Component {
   }
 
   render() {
-    const { isLoading } = this.props.auth;
+    const { loading } = this.state;
 
     return (
       <ImageBackground
@@ -60,7 +62,7 @@ class SignupScreen extends Component {
         style={styles.container}
         imageStyle={{ resizeMode: 'cover' }}
       >
-        <View style={{alignItems: 'center', marginTop: 80}}>
+        <View style={{alignItems: 'center', marginTop: 150}}>
           <Text
             style={styles.bigWelcomeText}
           >
@@ -121,7 +123,7 @@ class SignupScreen extends Component {
           onChangeText={password => this.setState({ password })}
         >
         </Input>
-        {isLoading ?
+        {loading ?
           <ActivityIndicator size="large" color="#f4b20b" style={{paddingTop: 10}}/> : null
         }
         {this.state.msg ?

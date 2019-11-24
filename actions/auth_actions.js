@@ -22,9 +22,6 @@ export const loadToken = () => async (dispatch) => {
 }
 
 export const signup = ({ name, email, password }) => async(dispatch) => {
-  dispatch({
-    type: SIGNUP
-  })
   const config = {
     headers: {
       'Content-Type': 'application/json'
