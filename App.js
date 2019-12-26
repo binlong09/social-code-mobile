@@ -1,5 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, KeyboardAvoidingView, StatusBar } from 'react-native';
+import {
+  StyleSheet, Text, View, Platform,
+  KeyboardAvoidingView, StatusBar
+} from 'react-native';
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -138,15 +141,15 @@ export default class App extends React.Component {
                  )
             },
           },
-          // Profile: {
-          //   screen: ProfileScreen,
-          //   navigationOptions: {
-          //     tabBarLabel: 'Profile',
-          //     tabBarIcon: ({tintColor, activeTintColor}) => (
-          //        <Icon name="account-circle" size={26} color={tintColor} />
-          //     )
-          //   },
-          // }
+          Profile: {
+            screen: ProfileScreen,
+            navigationOptions: {
+              tabBarLabel: 'Profile',
+              tabBarIcon: ({tintColor, activeTintColor}) => (
+                 <Icon name="account-circle" size={26} color={tintColor} />
+              )
+            },
+          }
         }, {
           tabBarPosition: 'bottom',
           swipeEnabled: true, //swipe between different tabs.

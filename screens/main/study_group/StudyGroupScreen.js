@@ -88,7 +88,7 @@ class StudyGroupScreen extends Component {
     const { ...props } = this.props;
     const { isLoading, study_groups } = this.props.study_groups;
 
-    LayoutAnimation.easeInEaseOut();
+    // LayoutAnimation.easeInEaseOut();
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>

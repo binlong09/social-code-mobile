@@ -6,9 +6,10 @@
     "sdkVersion": "33.0.0",
     "platforms": [
       "ios",
-      "android"
+      "android",
+      "web"
     ],
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/SCLogo.png",
     "splash": {
@@ -23,7 +24,11 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.socialcode.socialcode"
+      "bundleIdentifier": "com.socialcode.socialcode",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to take pictures of study group documents",
+        "NSPhotoLibraryUsageDescription": "This app uses the photo library to upload study group images"
+      }
     },
     "android": {
       "package": "com.socialcode.socialcode"
